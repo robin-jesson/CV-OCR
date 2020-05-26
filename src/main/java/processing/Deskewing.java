@@ -55,6 +55,7 @@ public class Deskewing {
         Mat M = Imgproc.getRotationMatrix2D(new Point(h/2,w/2),angle,1.0);
         Imgproc.warpAffine(loadedImage, rotated, M,loadedImage.size(),Imgproc.INTER_CUBIC);
         //saveImage(rotated,"rotated.jpg");
+        Core.bitwise_not(rotated,rotated);
         return rotated;
     }
 
