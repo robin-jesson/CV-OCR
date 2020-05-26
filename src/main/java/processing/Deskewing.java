@@ -18,7 +18,7 @@ public class Deskewing {
         Core.bitwise_not(gray,gray);
         Mat thresh = new Mat();
         Imgproc.threshold(gray,thresh,0,255,Imgproc.THRESH_OTSU);
-        
+
         RotatedRect rect = Imgproc.minAreaRect(getPoints(thresh));
         double angle = rect.angle;
         if(angle<-45)
@@ -34,6 +34,28 @@ public class Deskewing {
         Imgproc.warpAffine(loadedImage, rotated, M,loadedImage.size(),Imgproc.INTER_CUBIC);
         saveImage(rotated,"rotated.jpg");
 
+    }
+
+    public static Mat deskew(Mat roi){
+        Mat loadedImage = roi.clone();
+        Imgproc.cvtColor(loadedImage, loadedImage, Imgproc.COLOR_BGRA2GRAY, 1);
+        Core.bitwise_not(loadedImage,loadedImage);
+        Imgproc.threshold(loadedImage,loadedImage,0,255,Imgproc.THRESH_OTSU);
+
+        RotatedRect rect = Imgproc.minAreaRect(getPoints(loadedImage));
+        double angle = rect.angle;
+        if(angle<-45)
+            angle = -(90+angle);
+        else
+            angle = -angle;
+
+        double h = loadedImage.height();
+        double w = loadedImage.width();
+        Mat rotated = new Mat();
+        Mat M = Imgproc.getRotationMatrix2D(new Point(h/2,w/2),angle,1.0);
+        Imgproc.warpAffine(loadedImage, rotated, M,loadedImage.size(),Imgproc.INTER_CUBIC);
+        //saveImage(rotated,"rotated.jpg");
+        return rotated;
     }
 
     private static MatOfPoint2f getPoints(Mat m){
@@ -61,6 +83,18 @@ public class Deskewing {
     public static void saveImage(Mat imageMatrix, String targetPath) {
         Imgcodecs imgcodecs = new Imgcodecs();
         imgcodecs.imwrite(targetPath, imageMatrix);
+    }
+
+    public static Mat load(String imagePath) {
+        Imgcodecs imageCodecs = new Imgcodecs();
+        try{
+            return imageCodecs.imread(imagePath);
+        }
+        catch(UnsatisfiedLinkError e){
+            System.err.println("erreur de lecture de l'image "+imagePath);
+            System.exit(0);
+        }
+        return null;
     }
 
 
