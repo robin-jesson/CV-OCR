@@ -18,10 +18,6 @@ import java.util.LinkedList;
 
 public class Main {
     public static void main(String[] args){
-        Tesseract tess = new Tesseract();
-        tess.setDatapath("C:\\Users\\robin.jesson\\Downloads\\tesseract-2.00.fra.tar\\tesseract-2.00.fra\\tessdata");
-        tess.setLanguage("fra");
-        tess.setTessVariable("user_defined_dpi", "70");
 
         OpenCV.loadLocally();
         String imgSrc="C:\\Users\\robin.jesson\\Desktop\\cvr.png";
@@ -33,18 +29,6 @@ public class Main {
             Mat rot = Deskewing.deskew(roi);
             //saveImage(rot, ".\\roi\\rot_" + i++ + ".png");
 
-        }
-
-        File f = new File("./roi");
-        i=0;
-        for(File file : f.listFiles()){
-            System.out.println(file);
-            try {
-                String text = tess.doOCR(file);
-                System.out.println(text);
-            } catch (TesseractException e) {
-                e.printStackTrace();
-            }
         }
     }
 
