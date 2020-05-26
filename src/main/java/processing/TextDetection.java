@@ -11,13 +11,16 @@ import java.util.List;
 
 public class TextDetection {
 
-
+    /**
+     * Trouve les zones de texte en dilatant les contours des lettres.
+     * @param image image RGB ou NG
+     * @return Liste de matrice RGB ou NG selon format d'entrée
+     */
     public static LinkedList<Mat> getTextBlock(Mat image){
         final Size kernelSize = new Size(3, 3);
 
         Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, kernelSize);
         Mat loadedImage = image.clone();
-        Mat other = image.clone();
         Imgproc.cvtColor(loadedImage, loadedImage, Imgproc.COLOR_BGRA2GRAY, 1);
         Imgproc.threshold(loadedImage,loadedImage,125,255,Imgproc.THRESH_OTSU);
         Core.bitwise_not( loadedImage, loadedImage );

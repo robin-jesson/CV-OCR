@@ -1,5 +1,6 @@
 package processing;
 
+import main.Main;
 import nu.pattern.OpenCV;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -36,6 +37,11 @@ public class Deskewing {
 
     }
 
+    /**
+     * Modifie l'angle du texte pour que celui-ci soit horizontale.
+     * @param roi matrice d'entrée RGB ou NG
+     * @return matrice BIN avec fond noir(=0.0) et lettre blanche (255.0)
+     */
     public static Mat deskew(Mat roi){
         Mat loadedImage = roi.clone();
         Imgproc.cvtColor(loadedImage, loadedImage, Imgproc.COLOR_BGRA2GRAY, 1);
@@ -54,8 +60,13 @@ public class Deskewing {
         Mat rotated = new Mat();
         Mat M = Imgproc.getRotationMatrix2D(new Point(h/2,w/2),angle,1.0);
         Imgproc.warpAffine(loadedImage, rotated, M,loadedImage.size(),Imgproc.INTER_CUBIC);
-        //saveImage(rotated,"rotated.jpg");
-        Core.bitwise_not(rotated,rotated);
+
+        //Core.bitwise_not(rotated,rotated);
+
+
+
+        Imgproc.threshold(rotated,rotated,0,255,Imgproc.THRESH_OTSU);
+        //Main.saveImage(rotated,"rotated.jpg");
         return rotated;
     }
 
