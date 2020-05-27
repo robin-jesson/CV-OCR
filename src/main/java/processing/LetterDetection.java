@@ -1,30 +1,78 @@
 package processing;
 
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
+import main.Main;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class LetterDetection {
+
+    private static Mat createFakeColNB(){
+        Mat m = new Mat(15,1,CvType.CV_8U);
+        double[] da = new double[]{0,0,0,255,255,255,255,255,0,0,0,255,255,255,255};
+        for(int i=0;i<da.length;i++)
+            m.put(i,0, new double[]{da[i]});
+        return m;
+    }
+
+    private static Mat addBegEndRowsToMat(Mat mat){
+        Mat begLine = new Mat(1,mat.cols(),CvType.CV_8U, Scalar.all(0));
+        Mat endLine = new Mat(1,mat.cols(),CvType.CV_8U, Scalar.all(0));
+        Mat matFlat = mat.reshape(1);
+        begLine.push_back(matFlat);
+        begLine.push_back(endLine);
+        begLine.reshape(mat.cols());
+        System.out.println(matFlat.size());
+        return begLine;
+    }
+
     public static LinkedList<Mat> detectLinesOfRoi(Mat roi){
         LinkedList<Mat> lines = new LinkedList<Mat>();
-        Mat m = new Mat();
+        Mat colNB = new Mat(roi.rows(),1, CvType.CV_8U);
         for(int i=0;i<roi.rows();i++){
             Mat row = roi.row(i);
             Core.MinMaxLocResult res = Core.minMaxLoc(row);
-            System.out.println(res.maxVal);
-
+            colNB.put(i,0, new double[]{res.maxVal});
+        }
+        //Mat colNB = createFakeColNB();
+        colNB = addBegEndRowsToMat(colNB);
+        ArrayList<Integer> beginsLines = new ArrayList<>();
+        ArrayList<Integer> endsLines = new ArrayList<>();
+        boolean isInLine = false;
+        for(int i=0;i<colNB.rows();i++){
+            double color = colNB.get(i,0)[0];
+            if(!isInLine && color==255.0){
+                isInLine = true;
+                beginsLines.add(i);
+                System.out.println("début "+ (i));
+            }
+            else if(isInLine && color==0.0){
+                isInLine = false;
+                endsLines.add(i);
+                System.out.println("fin "+i);
+            }
+            else if(isInLine && i==colNB.rows()-1){
+                endsLines.add(i);
+                System.out.println("fin "+colNB.rows());
+            }
+        }
+        Mat augmentedROI = addBegEndRowsToMat(roi);
+        for(int i=0;i<beginsLines.size();i++){
+            Rect rect = new Rect(new Point(0,beginsLines.get(i)), new Point(roi.cols(),endsLines.get(i)));
+            Mat lineROI = new Mat(augmentedROI,rect);
+            lines.add(lineROI);
         }
         return lines;
     }
 
-    public static LinkedList<Mat> detectWordsOfLine(Mat line){
+    public static LinkedList<Mat> detectWordsOfLine(Mat lineROI){
         LinkedList<Mat> words = new LinkedList<Mat>();
         return words;
     }
 
-    public static LinkedList<Mat> detectLettersOfWord(Mat word){
+    public static LinkedList<Mat> detectLettersOfWord(Mat wordROI){
         LinkedList<Mat> letters = new LinkedList<Mat>();
         //hauteur >= largeur
         return letters;

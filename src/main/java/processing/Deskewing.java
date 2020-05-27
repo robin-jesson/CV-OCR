@@ -1,46 +1,23 @@
 package processing;
 
+import com.recognition.software.jdeskew.ImageDeskew;
 import main.Main;
 import nu.pattern.OpenCV;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+import javax.crypto.spec.PSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class Deskewing {
-    public static void main(String[] args){
-        OpenCV.loadLocally();
-        String img="C:\\Users\\robin.jesson\\Desktop\\pench3.png";
-        Mat loadedImage = loadImage(img);
-        Mat gray = new Mat();
-        Imgproc.cvtColor(loadedImage, gray, Imgproc.COLOR_BGRA2GRAY, 1);
-        Core.bitwise_not(gray,gray);
-        Mat thresh = new Mat();
-        Imgproc.threshold(gray,thresh,0,255,Imgproc.THRESH_OTSU);
-
-        RotatedRect rect = Imgproc.minAreaRect(getPoints(thresh));
-        double angle = rect.angle;
-        if(angle<-45)
-            angle = -(90+angle);
-        else
-            angle = -angle;
-
-        Size size=loadedImage.size();
-        double h = size.height;
-        double w = size.width;
-        Mat rotated = new Mat();
-        Mat M = Imgproc.getRotationMatrix2D(new Point(h/2,w/2),angle,1.0);
-        Imgproc.warpAffine(loadedImage, rotated, M,loadedImage.size(),Imgproc.INTER_CUBIC);
-        saveImage(rotated,"rotated.jpg");
-
-    }
 
     /**
      * Modifie l'angle du texte pour que celui-ci soit horizontale.
      * @param roi matrice d'entrée RGB ou NG
-     * @return matrice BIN avec fond noir(=0.0) et lettre blanche (255.0)
+     * @return matrice BIN avec fond noir(0.0) et lettre blanche (255.0)
      */
     public static Mat deskew(Mat roi){
         Mat loadedImage = roi.clone();
@@ -66,7 +43,7 @@ public class Deskewing {
 
 
         Imgproc.threshold(rotated,rotated,0,255,Imgproc.THRESH_OTSU);
-        //Main.saveImage(rotated,"rotated.jpg");
+        Main.saveImage(rotated,"rotated.jpg");
         return rotated;
     }
 
