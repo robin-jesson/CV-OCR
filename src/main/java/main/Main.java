@@ -28,11 +28,12 @@ public class Main {
         LinkedList<Mat> rects = TextDetection.getTextBlock(img);
         int i = 0;
         for(Mat roi : rects) {
-            Mat deskewed = Deskewing.deskew(roi);
+            Mat deskewed = Deskewing.deskew2(roi,i);
+            saveImage(deskewed,"roi/deskew/"+i+".png");
             LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
             int j = 0;
             for(Mat line : lines){
-                saveImage(line,"roi/"+i+"_"+ j++ +".png");
+                saveImage(line,"roi/crop/"+i+"_"+ j++ +".png");
             }
             j = 0;
             i++;
@@ -52,8 +53,10 @@ public class Main {
     }
 
     public static void saveImage(Mat imageMatrix, String targetPath) {
-        Imgcodecs imgcodecs = new Imgcodecs();
-        imgcodecs.imwrite(targetPath, imageMatrix);
+        if(!imageMatrix.empty()){
+            Imgcodecs imgcodecs = new Imgcodecs();
+            imgcodecs.imwrite(targetPath, imageMatrix);
+        }
     }
 
 

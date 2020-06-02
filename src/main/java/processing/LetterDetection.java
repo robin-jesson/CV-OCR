@@ -46,25 +46,59 @@ public class LetterDetection {
             if(!isInLine && color==255.0){
                 isInLine = true;
                 beginsLines.add(i);
-                System.out.println("début "+ (i));
+                //System.out.println("début "+ (i));
             }
             else if(isInLine && color==0.0){
                 isInLine = false;
                 endsLines.add(i);
-                System.out.println("fin "+i);
+                //System.out.println("fin "+i);
             }
             else if(isInLine && i==colNB.rows()-1){
                 endsLines.add(i);
-                System.out.println("fin "+colNB.rows());
+                //System.out.println("fin "+colNB.rows());
             }
         }
         Mat augmentedROI = addBegEndRowsToMat(roi);
         for(int i=0;i<beginsLines.size();i++){
             Rect rect = new Rect(new Point(0,beginsLines.get(i)), new Point(roi.cols(),endsLines.get(i)));
             Mat lineROI = new Mat(augmentedROI,rect);
-            lines.add(lineROI);
+            lines.add(cropLine(lineROI));
         }
         return lines;
+    }
+
+    public static Mat cropLine(Mat line){
+        int beginR =0;
+        int endR=0;
+        int beginC=0;
+        int endC  = 0;
+        for(int i=0;i<line.rows();i++){
+            if(Core.minMaxLoc(line.row(i)).maxVal!=0.0){
+                beginR = i;
+                break;
+            }
+        }
+        for(int i=line.rows()-1;i>=0;i--){
+            if(Core.minMaxLoc(line.row(i)).maxVal!=0.0){
+                endR = i;
+                break;
+            }
+        }
+        for(int i=0;i<line.cols();i++){
+            if(Core.minMaxLoc(line.col(i)).maxVal!=0.0){
+                beginC = i;
+                break;
+            }
+        }
+        for(int i=line.cols()-1;i>=0;i--){
+            if(Core.minMaxLoc(line.col(i)).maxVal!=0.0){
+                endC = i;
+                break;
+            }
+        }
+        Rect rect = new Rect(new Point(beginC,beginR), new Point(endC,endR));
+        //System.out.println(rect);
+        return new Mat(line,rect);
     }
 
     public static LinkedList<Mat> detectWordsOfLine(Mat lineROI){
