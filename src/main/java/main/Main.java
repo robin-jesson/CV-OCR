@@ -19,16 +19,23 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 
 public class Main {
+
+    static{
+        OpenCV.loadLocally();
+    }
+
     public static void main(String[] args){
 
-        OpenCV.loadLocally();
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\cvr.png";
+        //OpenCV.loadLocally();
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\ipad.jpg";
         //String imgSrc="C:\\Users\\robin.jesson\\Downloads\\EnglishFnt\\EnglishFnt\\English\\Fnt\\Sample018\\img018-00042.png";
         Mat img = loadImage(imgSrc);
         LinkedList<Mat> rects = TextDetection.getTextBlock(img);
         int i = 0;
         for(Mat roi : rects) {
-            Mat deskewed = Deskewing.deskew2(roi,i);
+            progressBar(i,rects.size()-1);
+            //saveImage(roi,"roi/skew/"+i+".png");
+            Mat deskewed = Deskewing.deskew(roi);
             saveImage(deskewed,"roi/deskew/"+i+".png");
             LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
             int j = 0;
@@ -77,6 +84,18 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void progressBar(int curr, int max){
+        String pB = "|";
+        for(int i = 0; i<curr; i++){
+            pB+="=";
+        }
+        for(;curr<max;curr++){
+            pB+=" ";
+        }
+        pB+="|\r";
+        System.out.print(pB);
     }
 
 
