@@ -45,43 +45,20 @@ public class PageDetection {
                     screenCnt = mP;
                     screenCnt2f = approx;
                 }
-                //System.out.println(biggestPeri);
             }
-
         }
         List<MatOfPoint> l = new ArrayList<>();
         l.add(screenCnt);
-        //System.out.println("4 points non triés");
-        /*for(Point p : screenCnt2f.toList()){
-            //System.out.println("("+p.x+", "+p.y+") +:"+(p.x+p.y)+" -:"+(p.x-p.y));
-            //Imgproc.drawMarker(image,p,new Scalar(255,0,0),Imgproc.MARKER_CROSS,10,3);
-        }*/
-
-        //System.out.println("4 points triés");
-        /*for(Point p : orderPoints(screenCnt2f.toList())){
-            //System.out.println("("+p.x+", "+p.y+")");
-            //Imgproc.drawMarker(image,p,new Scalar(255,0,0),Imgproc.MARKER_CROSS,10,3);
-            //Main.imshow(image);
-        }*/
         MatOfPoint2f ptsScaled = new MatOfPoint2f();
         Core.multiply(screenCnt2f,new Scalar(ratio,ratio),ptsScaled);
-        Mat warped = fourPointTransform(orig,ptsScaled.toList(),ratio);
+        Mat warped = fourPointTransform(orig,ptsScaled.toList());
         Main.saveImage(warped,"warped.png");
 
 
 
     }
 
-
-
-    private static List<Point> mulByNumber(List<Point> src, double d){
-        List<Point> res = new ArrayList<>();
-        for(Point p : src)
-            res.add(new Point(p.x*d,p.y*d));
-        return res;
-    }
-
-    public static Mat resizeH(Mat src, int height){
+    private static Mat resizeH(Mat src, int height){
         int w = src.width();
         int h = src.height();
         Size s = new Size((double)w*height/h,height);
@@ -147,7 +124,7 @@ public class PageDetection {
         return rect;
     }
 
-    private static Mat fourPointTransform(Mat image, List<Point> pts, double ratio){
+    private static Mat fourPointTransform(Mat image, List<Point> pts){
         List<Point> rect = orderPoints(pts);
 
         Point tl = rect.get(0);
@@ -173,23 +150,5 @@ public class PageDetection {
         return warped;
     }
 
-    private static void printMat(Mat m){
-        for(int i=0;i<m.rows();i++){
-            for(int j=0;j<m.cols();j++){
-                System.out.print(m.get(i,j)[0]+" ");
-            }
-            System.out.println();
-        }
-    }
 
-    private static Mat listPointToMat(List<Point> pts){
-        Mat m = new Mat(new Size(2,4),CvType.CV_16U);
-        for(int i=0;i<pts.size();i++){
-            //System.out.println(pts.get(i));
-            m.put(i,0,pts.get(i).x);
-            m.put(i,1,pts.get(i).y);
-        }
-        System.out.println(m.size());
-        return m;
-    }
 }
