@@ -13,10 +13,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PageDetection {
-    public static void main(String[] args) {
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\iphone.jpg";
+    public static Mat detectAndCropPage(Mat image) {
 
-        Mat image = Main.loadImage(imgSrc);
         double ratio = image.rows()/500;
         Mat orig = image.clone();
         image = PageDetection.resizeH(image,500);
@@ -54,7 +52,7 @@ public class PageDetection {
         Mat warped = fourPointTransform(orig,ptsScaled.toList());
         Main.saveImage(warped,"warped.png");
 
-
+        return warped;
 
     }
 

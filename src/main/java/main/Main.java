@@ -6,6 +6,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import processing.Deskewing;
 import processing.LetterDetection;
+import processing.PageDetection;
 import processing.TextDetection;
 
 import javax.imageio.ImageIO;
@@ -27,10 +28,11 @@ public class Main {
     public static void main(String[] args){
 
         //OpenCV.loadLocally();
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\ipad.jpg";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\iphone.jpg";
         //String imgSrc="C:\\Users\\robin.jesson\\Downloads\\EnglishFnt\\EnglishFnt\\English\\Fnt\\Sample018\\img018-00042.png";
         Mat img = loadImage(imgSrc);
-        LinkedList<Mat> rects = TextDetection.getTextBlock(img);
+        Mat warped = PageDetection.detectAndCropPage(img);
+        LinkedList<Mat> rects = TextDetection.getTextBlock(warped);
         int i = 0;
         for(Mat roi : rects) {
             progressBar(i,rects.size()-1);
