@@ -63,11 +63,22 @@ public class PageDetection {
             //Imgproc.drawMarker(image,p,new Scalar(255,0,0),Imgproc.MARKER_CROSS,10,3);
             //Main.imshow(image);
         }*/
-        Mat warped = fourPointTransform(image,screenCnt2f.toList(),ratio);
+        MatOfPoint2f ptsScaled = new MatOfPoint2f();
+        Core.multiply(screenCnt2f,new Scalar(ratio,ratio),ptsScaled);
+        Mat warped = fourPointTransform(orig,ptsScaled.toList(),ratio);
         Main.saveImage(warped,"warped.png");
 
 
 
+    }
+
+
+
+    private static List<Point> mulByNumber(List<Point> src, double d){
+        List<Point> res = new ArrayList<>();
+        for(Point p : src)
+            res.add(new Point(p.x*d,p.y*d));
+        return res;
     }
 
     public static Mat resizeH(Mat src, int height){
@@ -138,51 +149,27 @@ public class PageDetection {
 
     private static Mat fourPointTransform(Mat image, List<Point> pts, double ratio){
         List<Point> rect = orderPoints(pts);
-        //System.out.println(rect);
 
         Point tl = rect.get(0);
         Point tr = rect.get(1);
         Point br = rect.get(2);
         Point bl = rect.get(3);
 
-        double widthA = Math.sqrt(
-                (br.x-bl.x)*(br.x-bl.x)+(br.y-bl.y)*(br.y-bl.y)
-        );
-        double widthB = Math.sqrt(
-                (tr.x-tl.x)*(tr.x-tl.x)+(tr.y-tl.y)*(tr.y-tl.y)
-        );
+        double widthA = Math.sqrt((br.x-bl.x)*(br.x-bl.x)+(br.y-bl.y)*(br.y-bl.y));
+        double widthB = Math.sqrt((tr.x-tl.x)*(tr.x-tl.x)+(tr.y-tl.y)*(tr.y-tl.y));
         double maxWidth = Math.max(widthA,widthB);
-        double heightA = Math.sqrt(
-                (tr.x-br.x)*(tr.x-br.x)+(tr.y-br.y)*(tr.y-br.y)
-        );
-        double heightB = Math.sqrt(
-                (tl.x-bl.x)*(tl.x-bl.x)+(tl.y-bl.y)*(tl.y-bl.y)
-        );
+
+        double heightA = Math.sqrt((tr.x-br.x)*(tr.x-br.x)+(tr.y-br.y)*(tr.y-br.y));
+        double heightB = Math.sqrt((tl.x-bl.x)*(tl.x-bl.x)+(tl.y-bl.y)*(tl.y-bl.y));
         double maxHeight = Math.max(heightA,heightB);
 
-        /*List<Point> dst = new ArrayList<>();
-        dst.add(new Point(0,0));
-        dst.add(new Point(maxWidth-1,0));
-        dst.add(new Point(maxWidth-1,maxHeight-1));
-        dst.add(new Point(0,maxHeight-1));*/
-        //printMat(listPointToMat(rect));
-        MatOfPoint2f src = new MatOfPoint2f(
-                rect.get(0),
-                rect.get(1),
-                rect.get(2),
-                rect.get(3)
-        );
-
-        MatOfPoint2f dst = new MatOfPoint2f(
-                new Point(0,0),
-                new Point(maxWidth-1,0),
-                new Point(maxWidth-1,maxHeight-1),
-                new Point(0,maxHeight-1)
-        );
-
+        MatOfPoint2f src = new MatOfPoint2f(rect.get(0), rect.get(1), rect.get(2), rect.get(3));
+        MatOfPoint2f dst = new MatOfPoint2f(new Point(0,0), new Point(maxWidth-1,0),
+                new Point(maxWidth-1,maxHeight-1), new Point(0,maxHeight-1));
         Mat M = Imgproc.getPerspectiveTransform(src,dst);
         Mat warped = new Mat();
         Imgproc.warpPerspective(image,warped,M,new Size(maxWidth,maxHeight));
+
         return warped;
     }
 
