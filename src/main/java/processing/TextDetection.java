@@ -36,10 +36,10 @@ public class TextDetection {
             Rect rect = Imgproc.boundingRect(contours.get(i));
             if (rect.width > 35 && rect.height > 35){
                 rois.add(new Mat(image,rect));
-               //Imgproc.rectangle(other, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(255,0,0));
+                //Imgproc.rectangle(image, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(255,0,0));
             }
         }
-        //saveImage(other, "img.jpg");
+        //Image.saveImage(image, "textzones.jpg");
         return rois;
 
     }

@@ -1,19 +1,19 @@
 package processing;
 
 import exception.AeraException;
-import main.Main;
-import nu.pattern.OpenCV;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.utils.Converters;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 
 public class PageDetection {
+
+    /**
+     * Détecte une page dans une image. Si aucune page n'est détectée, alors l'image originale sera rendue.
+     * @param image
+     * @return
+     */
     public static Mat detectAndCropPage(Mat image) {
 
         double ratio = image.rows()/500;
@@ -147,7 +147,6 @@ public class PageDetection {
         Mat M = Imgproc.getPerspectiveTransform(src,dst);
         Mat warped = new Mat();
         Imgproc.warpPerspective(image,warped,M,new Size(maxWidth,maxHeight));
-
         return warped;
     }
 
