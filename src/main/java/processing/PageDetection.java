@@ -1,5 +1,6 @@
 package processing;
 
+import exception.AeraException;
 import main.Main;
 import nu.pattern.OpenCV;
 import org.opencv.core.*;
@@ -17,7 +18,7 @@ public class PageDetection {
 
         double ratio = image.rows()/500;
         Mat orig = image.clone();
-        image = PageDetection.resizeH(image,500);
+        image = Image.resizeH(image,500);
 
         Mat gray = new Mat();
         Imgproc.cvtColor(image,gray,Imgproc.COLOR_BGR2GRAY);
@@ -49,21 +50,20 @@ public class PageDetection {
         l.add(screenCnt);
         MatOfPoint2f ptsScaled = new MatOfPoint2f();
         Core.multiply(screenCnt2f,new Scalar(ratio,ratio),ptsScaled);
-        Mat warped = fourPointTransform(orig,ptsScaled.toList());
-        Main.saveImage(warped,"warped.png");
+        Mat warped = new Mat();
+        try {
+            warped = fourPointTransform(orig,ptsScaled.toList());
+        } catch (AeraException e) {
+            e.printStackTrace();
+            warped = orig;
+    }
+        Image.saveImage(warped,"warped.png");
 
         return warped;
 
     }
 
-    private static Mat resizeH(Mat src, int height){
-        int w = src.width();
-        int h = src.height();
-        Size s = new Size((double)w*height/h,height);
-        Mat dst = new Mat();
-        Imgproc.resize(src,dst,s);
-        return dst;
-    }
+
 
     private static Point getTopLeft(List<Point> pts){
         double min= Double.MAX_VALUE;
@@ -122,7 +122,7 @@ public class PageDetection {
         return rect;
     }
 
-    private static Mat fourPointTransform(Mat image, List<Point> pts){
+    private static Mat fourPointTransform(Mat image, List<Point> pts) throws AeraException {
         List<Point> rect = orderPoints(pts);
 
         Point tl = rect.get(0);
@@ -137,6 +137,9 @@ public class PageDetection {
         double heightA = Math.sqrt((tr.x-br.x)*(tr.x-br.x)+(tr.y-br.y)*(tr.y-br.y));
         double heightB = Math.sqrt((tl.x-bl.x)*(tl.x-bl.x)+(tl.y-bl.y)*(tl.y-bl.y));
         double maxHeight = Math.max(heightA,heightB);
+
+        if(maxHeight * maxWidth < (image.width()*image.height()*0.70))
+            throw new AeraException();
 
         MatOfPoint2f src = new MatOfPoint2f(rect.get(0), rect.get(1), rect.get(2), rect.get(3));
         MatOfPoint2f dst = new MatOfPoint2f(new Point(0,0), new Point(maxWidth-1,0),
