@@ -64,14 +64,15 @@ public class Main {
     }
 
     private static void progressBar(int curr, int max){
+        int percent = (int)((double)curr/max*100);
         String pB = "|";
-        for(int i = 0; i<curr; i++){
+        for(int i = 0; i<percent; i++){
             pB+="#";
         }
-        for(;curr<max;curr++){
+        for(int i = percent;i<100;i++){
             pB+=" ";
         }
-        pB+="|\r";
+        pB+="|"+percent+"\r";
         System.out.print(pB);
     }
 
