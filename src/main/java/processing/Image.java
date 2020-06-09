@@ -34,8 +34,8 @@ public class Image {
         }
     }
 
-    public static void imshow(Mat src) {
-        Mat img = Image.resizeH(src,500);
+    public static void imshow(Mat src, int height) {
+        Mat img = Image.resizeH(src,height);
         MatOfByte matOfByte = new MatOfByte();
         Imgcodecs.imencode(".jpg", img, matOfByte);
         byte[] byteArray = matOfByte.toArray();
@@ -51,6 +51,10 @@ public class Image {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void imshow(Mat src) {
+        imshow(src,500);
     }
 
     public static Mat resizeH(Mat src, int height){

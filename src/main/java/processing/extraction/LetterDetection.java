@@ -1,6 +1,7 @@
-package processing;
+package processing.extraction;
 
 import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -111,6 +112,14 @@ public class LetterDetection {
     public static LinkedList<Mat> detectWordsOfLine(Mat lineROI){
         LinkedList<Mat> words = new LinkedList<Mat>();
         return words;
+    }
+
+    public static Mat erodeLetters(Mat roi){
+        Mat erod = new Mat();
+        final Size kernelSize = new Size(3, 3);
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, kernelSize);
+        Imgproc.erode(roi, erod, kernel,new Point(),1);
+        return erod;
     }
 
     public static LinkedList<Mat> detectLettersOfWord(Mat wordROI){

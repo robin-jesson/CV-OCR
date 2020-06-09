@@ -1,9 +1,14 @@
 package main;
 
+import processing.extraction.LetterDetection;
+import processing.extraction.TextDetection;
 import nu.pattern.OpenCV;
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.*;
-import processing.*;
+import processing.preprocessing.Denoising;
+import processing.preprocessing.Deskewing;
+import processing.preprocessing.PageDetection;
+import processing.Image;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,10 +25,11 @@ public class Main {
     }
 
     public static void main(String[] args){
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\iphone.jpg";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\ipad.jpg";
         Mat img = Image.loadImage(imgSrc);
         Mat warped = PageDetection.detectAndCropPage(img);
-        LinkedList<Mat> rects = TextDetection.getTextBlock(warped);
+        Mat bw = Denoising.removeShadowAndBinarize(warped);
+        LinkedList<Mat> rects = TextDetection.getTextBlock(bw);
         int i = 0;
         for(Mat roi : rects) {
             progressBar(i,rects.size()-1);
@@ -33,7 +39,10 @@ public class Main {
             LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
             int j = 0;
             for(Mat line : lines){
-                Image.saveImage(line,"roi/crop/"+i+"_"+ j++ +".png");
+                if(!line.empty()){
+                    Mat line2 = LetterDetection.erodeLetters(line);
+                    Image.saveImage(line,"roi/crop/"+i+"_"+ j++ +".png");
+                }
             }
             j = 0;
             i++;
@@ -57,7 +66,7 @@ public class Main {
     private static void progressBar(int curr, int max){
         String pB = "|";
         for(int i = 0; i<curr; i++){
-            pB+="=";
+            pB+="#";
         }
         for(;curr<max;curr++){
             pB+=" ";

@@ -1,4 +1,4 @@
-package processing;
+package processing.preprocessing;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
@@ -15,11 +15,12 @@ public class Deskewing {
         int width = im.width();
 
         Mat im_gs = new Mat();
-        Imgproc.cvtColor(im, im_gs, Imgproc.COLOR_BGRA2GRAY, 1);
-        Photo.fastNlMeansDenoising(im_gs,im_gs,3);
+        //Imgproc.cvtColor(im, im_gs, Imgproc.COLOR_BGRA2GRAY, 1);
+        //Photo.fastNlMeansDenoising(im_gs,im_gs,3);
 
         Mat im_bw = new Mat();
-        Imgproc.threshold(im_gs,im_bw,0,255,Imgproc.THRESH_BINARY_INV | Imgproc.THRESH_OTSU);
+        //Imgproc.threshold(im_gs,im_bw,0,255,Imgproc.THRESH_BINARY_INV | Imgproc.THRESH_OTSU);
+        Core.bitwise_not(im,im_bw);
 
         Mat lines = new Mat();
         Imgproc.HoughLinesP(im_bw,lines,1,Math.PI/180,200,width/12,width/150);

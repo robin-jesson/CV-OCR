@@ -1,4 +1,4 @@
-package processing;
+package processing.extraction;
 
 import nu.pattern.OpenCV;
 import org.opencv.core.*;
@@ -21,8 +21,8 @@ public class TextDetection {
 
         Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, kernelSize);
         Mat loadedImage = image.clone();
-        Imgproc.cvtColor(loadedImage, loadedImage, Imgproc.COLOR_BGRA2GRAY, 1);
-        Imgproc.threshold(loadedImage,loadedImage,125,255,Imgproc.THRESH_OTSU);
+        //Imgproc.cvtColor(loadedImage, loadedImage, Imgproc.COLOR_BGRA2GRAY, 1);
+        //Imgproc.threshold(loadedImage,loadedImage,125,255,Imgproc.THRESH_OTSU);
         Core.bitwise_not( loadedImage, loadedImage );
         Imgproc.dilate(loadedImage, loadedImage, kernel,new Point(),10);
         //saveImage(loadedImage, "dilate.jpg");

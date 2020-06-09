@@ -1,8 +1,9 @@
-package processing;
+package processing.preprocessing;
 
 import exception.AeraException;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
+import processing.Image;
 
 import java.util.ArrayList;
 import java.util.List;
