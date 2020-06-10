@@ -1,5 +1,6 @@
 package processing;
 
+import exception.NotFileException;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.Size;
@@ -11,20 +12,23 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.file.Paths;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class Image {
-    public static Mat loadImage(String imagePath) {
+    public static Mat loadImage(String imagePath) throws NotFileException {
+        if(!Paths.get(imagePath).toFile().exists())
+            throw new NotFileException();
+
         Imgcodecs imageCodecs = new Imgcodecs();
-        try{
+        return imageCodecs.imread(imagePath);
+        /*try{
             return imageCodecs.imread(imagePath);
         }
         catch(UnsatisfiedLinkError e){
-            System.err.println("erreur de lecture de l'image "+imagePath);
-            System.exit(0);
-        }
-        return null;
+            throw e;
+        }*/
     }
 
     public static void saveImage(Mat imageMatrix, String targetPath) {

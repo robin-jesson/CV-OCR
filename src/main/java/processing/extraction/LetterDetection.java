@@ -122,6 +122,14 @@ public class LetterDetection {
         return erod;
     }
 
+    public static Mat dilateLetters(Mat roi, int inter){
+        Mat dil = new Mat();
+        final Size kernelSize = new Size(3, 3);
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, kernelSize);
+        Imgproc.dilate(roi, dil, kernel,new Point(),inter);
+        return dil;
+    }
+
     public static LinkedList<Mat> detectLettersOfWord(Mat wordROI){
         LinkedList<Mat> letters = new LinkedList<Mat>();
         //hauteur >= largeur
