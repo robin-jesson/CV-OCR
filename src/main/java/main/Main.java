@@ -29,7 +29,7 @@ public class Main {
     }
 
     public static void main(String[] args){
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\cvr.png";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\ipad.jpg";
         Mat img = null;
         try {
             img = Image.loadImage(imgSrc);
@@ -49,22 +49,15 @@ public class Main {
             LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
             int j = 0;
             for(Mat line : lines){
+                int k=0;
                 if(!line.empty()){
-                    Mat lineDil = LetterDetection.dilateLetters(line, 3);
-                    List<MatOfPoint> contours = new ArrayList<>();
-                    Mat hier = new Mat();
-                    Imgproc.findContours(lineDil, contours, hier, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_NONE);
-                    for(int k=0; k< contours.size();k++) {
-                        Rect rect = Imgproc.boundingRect(contours.get(k));
-                        if(rect.height>line.height()/2){
-                            rect = new Rect(new Point(rect.x,0),new Point(rect.x+rect.width,line.height()));
-                            Imgproc.rectangle(line, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(255,0,0));
-
-                        }
-
-                    }
                     Image.saveImage(line,"roi/crop/"+i+"_"+ j++ +".png");
+                    List<Mat> words = LetterDetection.detectWordsOfLine(line);
+                    for(Mat word : words){
+                        Image.saveImage(LetterDetection.cropROI(word),"roi/words/"+i+"_"+ j +"_"+ k++ +".png");
+                    }
                 }
+                k=0;
             }
             j = 0;
             i++;
@@ -75,10 +68,13 @@ public class Main {
         try {
             Path cropPath = Paths.get("./roi/crop");
             Path deskewPath = Paths.get("./roi/deskew");
+            Path wordsPath = Paths.get("./roi/words");
             FileUtils.deleteDirectory(cropPath.toFile());
             FileUtils.deleteDirectory(deskewPath.toFile());
+            FileUtils.deleteDirectory(wordsPath.toFile());
             Files.createDirectories(cropPath).toAbsolutePath();
             Files.createDirectories(deskewPath);
+            Files.createDirectories(wordsPath);
 
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize folder for upload!");

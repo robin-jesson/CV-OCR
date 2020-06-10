@@ -5,6 +5,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class LetterDetection {
 
@@ -111,6 +112,19 @@ public class LetterDetection {
 
     public static LinkedList<Mat> detectWordsOfLine(Mat lineROI){
         LinkedList<Mat> words = new LinkedList<Mat>();
+        Mat lineDil = LetterDetection.dilateLetters(lineROI, 3);
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hier = new Mat();
+        Imgproc.findContours(lineDil, contours, hier, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_NONE);
+        for(int k=0; k< contours.size();k++) {
+            Rect rect = Imgproc.boundingRect(contours.get(k));
+            if(rect.height>lineROI.height()/2){
+                Rect wordRect = new Rect(new Point(rect.x,0),new Point(rect.x+rect.width,lineROI.height()));
+                //Imgproc.rectangle(lineROI, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(255,0,0));
+                words.add(new Mat(lineROI,wordRect));
+            }
+
+        }
         return words;
     }
 
