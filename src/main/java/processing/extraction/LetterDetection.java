@@ -1,7 +1,10 @@
 package processing.extraction;
 
+import exception.TooSmallWidthOrHeightException;
 import org.opencv.core.*;
+import org.opencv.features2d.MSER;
 import org.opencv.imgproc.Imgproc;
+import processing.Image;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -145,42 +148,32 @@ public class LetterDetection {
         return dil;
     }
 
-    public static LinkedList<Mat> detectLettersOfWord(Mat wordROI){
+    public static LinkedList<Mat> detectLettersOfWord(Mat BWwordROI, String path) throws TooSmallWidthOrHeightException {
+        if(BWwordROI.width()<3 || BWwordROI.height()<3)
+            throw new TooSmallWidthOrHeightException();
+
         LinkedList<Mat> letters = new LinkedList<Mat>();
-        //hauteur >= largeur
-        Mat rowNB = new Mat(1,wordROI.cols(), CvType.CV_8U);
-        for(int i=0;i<wordROI.cols();i++){
-            Mat col = wordROI.col(i);
-            Core.MinMaxLocResult res = Core.minMaxLoc(col);
-            rowNB.put(0,i, new double[]{res.maxVal});
+
+        double h = BWwordROI.height();
+        double w = BWwordROI.width();
+        double image_size = h*w;
+        MSER mser = MSER.create();
+        mser.setMaxArea((int)image_size/2);
+        mser.setMinArea(10);
+
+        List<MatOfPoint> regions = new LinkedList<>();
+        MatOfRect rects = new MatOfRect();
+        mser.detectRegions(BWwordROI,regions,rects);
+        for(Rect rect : rects.toList()){
+            int x = rect.x;
+            int y = rect.y;
+            w = rect.width;
+            h = rect.height;
+
+            Imgproc.rectangle(BWwordROI, new Point(x,y), new Point(x+w,y+h),new Scalar(255,0,255),1);
         }
-        rowNB = addBegEndColsToMat(rowNB);
-        ArrayList<Integer> beginsLetters = new ArrayList<>();
-        ArrayList<Integer> endsLetters = new ArrayList<>();
-        boolean isInLetter = false;
-        for(int i=0;i<rowNB.cols();i++){
-            double color = rowNB.get(0,i)[0];
-            if(!isInLetter && color==255.0){
-                isInLetter = true;
-                beginsLetters.add(i);
-                //System.out.println("début "+ (i));
-            }
-            else if(isInLetter && color==0.0){
-                isInLetter = false;
-                endsLetters.add(i);
-                //System.out.println("fin "+i);
-            }
-            else if(isInLetter && i==rowNB.rows()-1){
-                endsLetters.add(i);
-                //System.out.println("fin "+colNB.rows());
-            }
-        }
-        Mat augmentedROI = addBegEndColsToMat(wordROI);
-        for(int i=0;i<beginsLetters.size();i++){
-            Rect rect = new Rect(new Point(beginsLetters.get(i),0), new Point(endsLetters.get(i),wordROI.rows()));
-            Mat lineROI = new Mat(augmentedROI,rect);
-            letters.add(cropROI(lineROI));
-        }
+
+        Image.saveImage(BWwordROI,path);
         return letters;
     }
 }

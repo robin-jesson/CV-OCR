@@ -55,7 +55,7 @@ public class PageDetection {
         try {
             warped = fourPointTransform(orig,ptsScaled.toList());
         } catch (AeraException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             warped = orig;
     }
         Image.saveImage(warped,"warped.png");

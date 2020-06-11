@@ -1,6 +1,7 @@
 package main;
 
 import exception.NotFileException;
+import exception.TooSmallWidthOrHeightException;
 import org.opencv.imgproc.Imgproc;
 import processing.extraction.LetterDetection;
 import processing.extraction.TextDetection;
@@ -55,6 +56,11 @@ public class Main {
                     List<Mat> words = LetterDetection.detectWordsOfLine(line);
                     for(Mat word : words){
                         Image.saveImage(LetterDetection.cropROI(word),"roi/words/"+i+"_"+ j +"_"+ k++ +".png");
+                        try {
+                            LetterDetection.detectLettersOfWord(word,"roi/letters/"+i+"_"+ j +"_"+ k++ +".png");
+                        } catch (TooSmallWidthOrHeightException e) {
+                            //do nothing
+                        }
                     }
                 }
                 k=0;
@@ -69,12 +75,15 @@ public class Main {
             Path cropPath = Paths.get("./roi/crop");
             Path deskewPath = Paths.get("./roi/deskew");
             Path wordsPath = Paths.get("./roi/words");
+            Path lettersPath = Paths.get("./roi/letters");
             FileUtils.deleteDirectory(cropPath.toFile());
             FileUtils.deleteDirectory(deskewPath.toFile());
             FileUtils.deleteDirectory(wordsPath.toFile());
+            FileUtils.deleteDirectory(lettersPath.toFile());
             Files.createDirectories(cropPath).toAbsolutePath();
             Files.createDirectories(deskewPath);
             Files.createDirectories(wordsPath);
+            Files.createDirectories(lettersPath);
 
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize folder for upload!");
