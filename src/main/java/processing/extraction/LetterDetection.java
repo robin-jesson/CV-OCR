@@ -121,7 +121,8 @@ public class LetterDetection {
             if(rect.height>lineROI.height()/2){
                 Rect wordRect = new Rect(new Point(rect.x,0),new Point(rect.x+rect.width,lineROI.height()));
                 //Imgproc.rectangle(lineROI, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height),new Scalar(255,0,0));
-                words.add(new Mat(lineROI,wordRect));
+                Mat word = new Mat(lineROI,wordRect);
+                words.add(word);
             }
 
         }
