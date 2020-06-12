@@ -1,5 +1,6 @@
 package main;
 
+import exception.DifferentSizeException;
 import exception.NotFileException;
 import exception.TooSmallWidthOrHeightException;
 import org.opencv.imgproc.Imgproc;
@@ -54,13 +55,16 @@ public class Main {
                 if(!line.empty()){
                     Image.saveImage(line,"roi/crop/"+i+"_"+ j++ +".png");
                     List<Mat> words = LetterDetection.detectWordsOfLine(line);
+                    int l = 0;
                     for(Mat word : words){
                         Image.saveImage(LetterDetection.cropROI(word),"roi/words/"+i+"_"+ j +"_"+ k++ +".png");
                         try {
-                            LetterDetection.detectLettersOfWord(word,"roi/letters/"+i+"_"+ j +"_"+ k++ +".png");
-                        } catch (TooSmallWidthOrHeightException e) {
-                            //do nothing
-                        }
+                            List<Mat> letters = LetterDetection.detectLettersOfWord(word,"roi/letters/"+i+"_"+ j +"_"+ k++ +".png");
+                            for(Mat letter : letters){
+                                Image.saveImage(letter,"roi/letters/"+i+"_"+ j +"_"+ k + "_"+ l++ +".png");
+                            }
+                        } catch (TooSmallWidthOrHeightException | DifferentSizeException e) {/* do nothing */}
+                        l=0;
                     }
                 }
                 k=0;

@@ -1,5 +1,6 @@
 package processing.extraction;
 
+import exception.DifferentSizeException;
 import exception.TooSmallWidthOrHeightException;
 import org.opencv.core.*;
 import org.opencv.features2d.MSER;
@@ -148,7 +149,7 @@ public class LetterDetection {
         return dil;
     }
 
-    public static LinkedList<Mat> detectLettersOfWord(Mat BWwordROI, String path) throws TooSmallWidthOrHeightException {
+    /*public static LinkedList<Mat> detectLettersOfWord(Mat BWwordROI, String path) throws TooSmallWidthOrHeightException {
         if(BWwordROI.width()<3 || BWwordROI.height()<3)
             throw new TooSmallWidthOrHeightException();
 
@@ -170,10 +171,63 @@ public class LetterDetection {
             w = rect.width;
             h = rect.height;
 
-            Imgproc.rectangle(BWwordROI, new Point(x,y), new Point(x+w,y+h),new Scalar(255,0,255),1);
+            //Imgproc.rectangle(BWwordROI, new Point(x,y), new Point(x+w,y+h),new Scalar(255,0,255),1);
+            letters.add(new Mat(BWwordROI,rect));
         }
 
-        Image.saveImage(BWwordROI,path);
+        //Image.saveImage(BWwordROI,path);
+        return letters;
+    }*/
+
+    public static LinkedList<Mat> detectLettersOfWord(Mat BWwordROI, String path) throws TooSmallWidthOrHeightException, DifferentSizeException {
+        if(BWwordROI.width()<3 || BWwordROI.height()<3)
+            throw new TooSmallWidthOrHeightException();
+
+        LinkedList<Mat> letters = new LinkedList<Mat>();
+        Mat rowNB = new Mat(1,BWwordROI.cols(), CvType.CV_8U);
+        //System.out.println(rowNB.size());
+        for(int i=0;i<BWwordROI.cols();i++){
+            Mat col = BWwordROI.col(i);
+            Core.MinMaxLocResult res = Core.minMaxLoc(col);
+            rowNB.put(0,i, new double[]{res.maxVal});
+        }
+        ArrayList<Integer> beginsLetters = new ArrayList<>();
+        ArrayList<Integer> endsLetters = new ArrayList<>();
+        boolean isInLetter = rowNB.get(0,0)[0]==255.0;
+        if(isInLetter) {
+            //System.out.println("début "+ 0);
+            beginsLetters.add(0);
+        }
+        for(int i=0;i<rowNB.cols();i++){
+            double color = rowNB.get(0,i)[0];
+            if(!isInLetter && color==255.0){
+                isInLetter = true;
+                beginsLetters.add(i);
+                //System.out.println("début "+ (i));
+            }
+            else if(isInLetter && color==0.0){
+                isInLetter = false;
+                endsLetters.add(i);
+                //System.out.println("fin "+i);
+            }
+            else if(isInLetter && i==rowNB.cols()-1){
+                endsLetters.add(i);
+                //System.out.println("fin "+i);
+            }
+        }
+        if(beginsLetters.size()!=endsLetters.size())
+            throw new DifferentSizeException();
+
+        for(int i=0;i<beginsLetters.size();i++) {
+            Rect rect = new Rect(new Point(beginsLetters.get(i), 0), new Point(endsLetters.get(i), BWwordROI.rows()));
+            Imgproc.rectangle(BWwordROI, new Point(rect.x,rect.y),
+                    new Point(rect.x+rect.width,rect.y+rect.height-1),new Scalar(255,0,255),1);
+            Mat lineROI = new Mat(BWwordROI, rect);
+            //letters.add(cropROI(lineROI));
+        }
+        letters.add(BWwordROI);
+
+
         return letters;
     }
 }
