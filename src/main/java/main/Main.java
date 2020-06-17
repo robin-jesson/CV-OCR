@@ -31,7 +31,7 @@ public class Main {
     }
 
     public static void main(String[] args){
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\ipad.jpg";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\ponct.jpg";
         Mat img = null;
         try {
             img = Image.loadImage(imgSrc);
@@ -41,12 +41,11 @@ public class Main {
         }
         Mat warped = PageDetection.detectAndCropPage(img);
         Mat bw = Denoising.removeShadowAndBinarize(warped);
-        LinkedList<Mat> rects = TextDetection.getTextBlock(bw);
+        LinkedList<Mat> textzones = TextDetection.getTextBlock(bw);
         int i = 0;
-        for(Mat roi : rects) {
-            progressBar(i,rects.size()-1);
+        for(Mat roi : textzones) {
+            progressBar(i,textzones.size()-1);
             Mat deskewed = Deskewing.deskewByHough(roi);
-            //deskewed = Deskewing.deskewByRotatedRect(deskewed);
             Image.saveImage(deskewed,"roi/deskew/"+i+".png");
             LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
             int j = 0;
@@ -59,7 +58,7 @@ public class Main {
                     for(Mat word : words){
                         Image.saveImage(LetterDetection.cropROI(word),"roi/words/"+i+"_"+ j +"_"+ k++ +".png");
                         try {
-                            List<Mat> letters = LetterDetection.detectLettersOfWord(word,"roi/letters/"+i+"_"+ j +"_"+ k++ +".png");
+                            List<Mat> letters = LetterDetection.detectLettersOfWord(word);
                             for(Mat letter : letters){
                                 Image.saveImage(letter,"roi/letters/"+i+"_"+ j +"_"+ k + "_"+ l++ +".png");
                             }

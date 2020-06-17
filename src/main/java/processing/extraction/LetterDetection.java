@@ -137,7 +137,7 @@ public class LetterDetection {
         Mat erod = new Mat();
         final Size kernelSize = new Size(3, 3);
         Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, kernelSize);
-        Imgproc.erode(roi, erod, kernel,new Point(),1);
+        Imgproc.erode(roi, erod, kernel,new Point());
         return erod;
     }
 
@@ -149,11 +149,11 @@ public class LetterDetection {
         return dil;
     }
 
-    /*public static LinkedList<Mat> detectLettersOfWord(Mat BWwordROI, String path) throws TooSmallWidthOrHeightException {
+    public static LinkedList<Mat> detectLettersOfWordByRegions(Mat BWwordROI) throws TooSmallWidthOrHeightException {
         if(BWwordROI.width()<3 || BWwordROI.height()<3)
             throw new TooSmallWidthOrHeightException();
 
-        LinkedList<Mat> letters = new LinkedList<Mat>();
+        LinkedList<Mat> letters = new LinkedList<>();
 
         double h = BWwordROI.height();
         double w = BWwordROI.width();
@@ -177,9 +177,9 @@ public class LetterDetection {
 
         //Image.saveImage(BWwordROI,path);
         return letters;
-    }*/
+    }
 
-    public static LinkedList<Mat> detectLettersOfWord(Mat BWwordROI, String path) throws TooSmallWidthOrHeightException, DifferentSizeException {
+    public static LinkedList<Mat> detectLettersOfWord(Mat BWwordROI) throws TooSmallWidthOrHeightException, DifferentSizeException {
         if(BWwordROI.width()<3 || BWwordROI.height()<3)
             throw new TooSmallWidthOrHeightException();
 
@@ -219,15 +219,31 @@ public class LetterDetection {
             throw new DifferentSizeException();
 
         for(int i=0;i<beginsLetters.size();i++) {
-            Rect rect = new Rect(new Point(beginsLetters.get(i), 0), new Point(endsLetters.get(i), BWwordROI.rows()));
-            Imgproc.rectangle(BWwordROI, new Point(rect.x,rect.y),
-                    new Point(rect.x+rect.width,rect.y+rect.height-1),new Scalar(255,0,255),1);
-            Mat lineROI = new Mat(BWwordROI, rect);
-            //letters.add(cropROI(lineROI));
+            Mat letter = new Mat(BWwordROI, new Rect(new Point(beginsLetters.get(i), 0), new Point(endsLetters.get(i), BWwordROI.rows())));
+            letters.add(letter);
         }
-        letters.add(BWwordROI);
 
 
         return letters;
+    }
+
+    private static Mat approxLetterContours(Mat letter){
+        Mat black = new Mat(letter.size(),letter.type(),new Scalar(0));
+        List<MatOfPoint> cnts = new ArrayList<>();
+        Mat hier = new Mat();
+        Imgproc.findContours(letter,cnts,hier, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_NONE);
+        for(MatOfPoint mP : cnts) {
+            MatOfPoint2f c = new MatOfPoint2f(mP.toArray());
+            double peri = Imgproc.arcLength(c,true);
+            MatOfPoint2f approx = new MatOfPoint2f();
+            Imgproc.approxPolyDP(c, approx,0.02*peri,true);
+            List<Point> points = approx.toList();
+            for(int i=0;i<points.size()-1;i++){
+                Imgproc.line(black,new Point(points.get(i).x,points.get(i).y),new Point(points.get(i+1).x,points.get(i+1).y),new Scalar(255));
+            }
+            if(points.size()>=2)
+                Imgproc.line(black,new Point(points.get(points.size()-1).x,points.get(points.size()-1).y),new Point(points.get(0).x,points.get(0).y),new Scalar(255));
+        }
+        return black;
     }
 }
