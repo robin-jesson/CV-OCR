@@ -80,6 +80,11 @@ public class LetterDetection {
         return lines;
     }
 
+    /**
+     * Crop each side of the image until it reach the letter border.
+     * @param roi  binary image, background is black and letter is white
+     * @return Cropped letter
+     */
     public static Mat cropROI(Mat roi){
         int beginR =0;
         int endR=0;

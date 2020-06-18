@@ -17,18 +17,19 @@ import java.nio.file.Paths;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class Image {
-    public static Mat loadImage(String imagePath) throws NotFileException {
+    public static Mat loadImage(String imagePath, boolean color) throws NotFileException {
         if(!Paths.get(imagePath).toFile().exists())
             throw new NotFileException();
 
         Imgcodecs imageCodecs = new Imgcodecs();
-        return imageCodecs.imread(imagePath);
-        /*try{
+        if(color)
             return imageCodecs.imread(imagePath);
-        }
-        catch(UnsatisfiedLinkError e){
-            throw e;
-        }*/
+        else
+            return imageCodecs.imread(imagePath, Imgcodecs.IMREAD_GRAYSCALE);
+    }
+
+    public static Mat loadImage(String imagePath) throws NotFileException {
+        return loadImage(imagePath,true);
     }
 
     public static void saveImage(Mat imageMatrix, String targetPath) {
