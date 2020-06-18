@@ -31,7 +31,7 @@ public class Main {
     }
 
     public static void main(String[] args){
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\cvr.png";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\20200618_155642000_iOS.jpg";
         Mat img = null;
         try {
             img = Image.loadImage(imgSrc);
