@@ -41,7 +41,7 @@ public class Caractarestic {
         return vec;
     }
 
-    private static KNearest trainKnn(File... folders) throws Exception {
+    private static KNearest trainKnn(boolean save, File... folders) throws Exception {
         int nbFile = 0;
         for(int i = 0; i < folders.length; i++)
             for(File f : folders[i].listFiles())
@@ -75,6 +75,7 @@ public class Caractarestic {
 
         KNearest knn = KNearest.create();
         knn.train(traindata, Ml.ROW_SAMPLE, labels);
+        knn.save("knn.yml");
         return knn;
     }
 
@@ -84,7 +85,7 @@ public class Caractarestic {
         File maj = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\maj").toFile();
         File ponct = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\ponct").toFile();
 
-        KNearest knn = trainKnn(num,maj,ponct);
+        KNearest knn = trainKnn(true, num,maj,ponct);
         File numtest = Paths.get("C:\\Users\\robin.jesson\\Desktop\\numtest").toFile();
         double total = 0;
         double totalFound = 0;
