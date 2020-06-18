@@ -16,7 +16,17 @@ import java.nio.file.Paths;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
+/**
+ * Image tools.
+ */
 public class Image {
+    /**
+     * Load an image into an OpenCV matrix.
+     * @param imagePath  path
+     * @param color  colour or black/white
+     * @return matrix of the image
+     * @throws NotFileException
+     */
     public static Mat loadImage(String imagePath, boolean color) throws NotFileException {
         if(!Paths.get(imagePath).toFile().exists())
             throw new NotFileException();
@@ -28,10 +38,21 @@ public class Image {
             return imageCodecs.imread(imagePath, Imgcodecs.IMREAD_GRAYSCALE);
     }
 
+    /**
+     * Load a coloured image
+     * @param imagePath path
+     * @return  matrix of the image
+     * @throws NotFileException
+     */
     public static Mat loadImage(String imagePath) throws NotFileException {
         return loadImage(imagePath,true);
     }
 
+    /**
+     * Save an image into a file.
+     * @param imageMatrix  matrix of the image
+     * @param targetPath  path where to save
+     */
     public static void saveImage(Mat imageMatrix, String targetPath) {
         if(!imageMatrix.empty()){
             Imgcodecs imgcodecs = new Imgcodecs();
@@ -39,6 +60,11 @@ public class Image {
         }
     }
 
+    /**
+     * Show an image in a window.
+     * @param src  mage
+     * @param height  height of the window
+     */
     public static void imshow(Mat src, int height) {
         Mat img = Image.resizeH(src,height);
         MatOfByte matOfByte = new MatOfByte();
@@ -58,10 +84,20 @@ public class Image {
         }
     }
 
+    /**
+     * Show an image into a window of 500 px.
+     * @param src  image
+     */
     public static void imshow(Mat src) {
         imshow(src,500);
     }
 
+    /**
+     * Resize an image given the height.
+     * @param src  image
+     * @param height  new height
+     * @return resized image
+     */
     public static Mat resizeH(Mat src, int height){
         int w = src.width();
         int h = src.height();

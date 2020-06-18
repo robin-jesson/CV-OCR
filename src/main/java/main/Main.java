@@ -30,15 +30,9 @@ public class Main {
         initFolder();
     }
 
-    public static void main(String[] args){
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\20200618_155642000_iOS.jpg";
-        Mat img = null;
-        try {
-            img = Image.loadImage(imgSrc);
-        } catch (NotFileException e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
+    public static void main(String[] args) throws NotFileException {
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\ipad.jpg";
+        Mat img = Image.loadImage(imgSrc);
         Mat warped = PageDetection.detectAndCropPage(img);
         Mat bw = Denoising.removeShadowAndBinarize(warped);
         LinkedList<Mat> textzones = TextDetection.getTextBlock(bw);
@@ -52,7 +46,7 @@ public class Main {
             for(Mat line : lines){
                 int k=0;
                 if(!line.empty()){
-                    Image.saveImage(line,"roi/crop/"+i+"_"+ j++ +".png");
+                    Image.saveImage(line,"roi/crop/"+i+"_"+ j++ +".jpg");
                     List<Mat> words = LetterDetection.detectWordsOfLine(line);
                     int l = 0;
                     for(Mat word : words){
@@ -73,6 +67,9 @@ public class Main {
         }
     }
 
+    /**
+     * initialize folder to store temporary image
+     */
     public static void initFolder() {
         try {
             Path cropPath = Paths.get("./roi/crop");
@@ -93,6 +90,11 @@ public class Main {
         }
     }
 
+    /**
+     * Write a pourcentage progressing bar.
+     * @param curr  current state
+     * @param max  maximum state
+     */
     private static void progressBar(int curr, int max){
         int percent = (int)((double)curr/max*100);
         String pB = "|";

@@ -11,9 +11,10 @@ import java.util.List;
 public class PageDetection {
 
     /**
-     * Détecte une page dans une image. Si aucune page n'est détectée, alors l'image originale sera rendue.
-     * @param image
-     * @return
+     * Detect the rectagle paper in an image.
+     * If none is found, then the original image is returned.
+     * @param image  original picture of a paper page.
+     * @return  either the page warped or the original page.
      */
     public static Mat detectAndCropPage(Mat image) {
 
@@ -55,17 +56,19 @@ public class PageDetection {
         try {
             warped = fourPointTransform(orig,ptsScaled.toList());
         } catch (AeraException e) {
-            //e.printStackTrace();
             warped = orig;
-    }
+        }
         Image.saveImage(warped,"warped.png");
 
         return warped;
 
     }
 
-
-
+    /**
+     * Return the top left point
+     * @param pts  four-point array
+     * @return  top left point
+     */
     private static Point getTopLeft(List<Point> pts){
         double min= Double.MAX_VALUE;
         Point tl = pts.get(0);
@@ -78,6 +81,11 @@ public class PageDetection {
         return tl;
     }
 
+    /**
+     * Return the bottom right point
+     * @param pts  four-point array
+     * @return  bottom right point
+     */
     private static Point getBottomRight(List<Point> pts){
         double max= Double.MIN_VALUE;
         Point br = pts.get(0);
@@ -90,6 +98,11 @@ public class PageDetection {
         return br;
     }
 
+    /**
+     * Return the top right point
+     * @param pts  four-point array
+     * @return  top right point
+     */
     private static Point getTopRight(List<Point> pts){
         double min= Double.MAX_VALUE;
         Point tr = pts.get(0);
@@ -102,6 +115,11 @@ public class PageDetection {
         return tr;
     }
 
+    /**
+     * Return the bottom left point
+     * @param pts  four-point array
+     * @return  bottom left point
+     */
     private static Point getBottomLeft(List<Point> pts){
         double max= Double.MIN_VALUE;
         Point bl = pts.get(0);
@@ -114,6 +132,17 @@ public class PageDetection {
         return bl;
     }
 
+    /**
+     * Order the four-point array as so :
+     * <ol>
+     *     <li>top left</li>
+     *     <li>bottom left</li>
+     *     <li>bottom right</li>
+     *     <li>top right</li>
+     * </ol>
+     * @param pts  four-point array
+     * @return four-point array ordered
+     */
     private static List<Point> orderPoints(List<Point> pts){
         List<Point> rect = new ArrayList<>();
         rect.add(getTopLeft(pts));
@@ -123,6 +152,13 @@ public class PageDetection {
         return rect;
     }
 
+    /**
+     * Warp the image according to the four points found.
+     * @param image  image to be transformed
+     * @param pts  four-point array
+     * @return  image transformed according to the four points
+     * @throws AeraException
+     */
     private static Mat fourPointTransform(Mat image, List<Point> pts) throws AeraException {
         List<Point> rect = orderPoints(pts);
 

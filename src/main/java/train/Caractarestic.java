@@ -1,5 +1,6 @@
 package train;
 
+import exception.NotDividibleException;
 import exception.NotFileException;
 import nu.pattern.OpenCV;
 import org.opencv.core.*;
@@ -13,9 +14,20 @@ import processing.extraction.LetterDetection;
 import java.io.File;
 import java.nio.file.Paths;
 
+/**
+ * Caracteristic vectors and KNN model
+ */
 public class Caractarestic {
-    private static int[] getVector(Mat letter, int charNb ,int step) throws Exception {
-        if(32%step!=0) throw new Exception("Step must divide 32");
+    /**
+     * Create the vector from a letter in black and white.
+     * @param letter  image
+     * @param charNb  character
+     * @param step
+     * @return vector creatd from the letter
+     * @throws NotDividibleException  step must divide 32
+     */
+    private static int[] getVector(Mat letter, int charNb ,int step) throws NotDividibleException {
+        if(32%step!=0) throw new NotDividibleException();
         int[] vec = new int[(32/step) * (32/step)];
         Mat m = new Mat();
         String c = ((char)charNb) + "[";
@@ -41,7 +53,14 @@ public class Caractarestic {
         return vec;
     }
 
-    private static KNearest trainKnn(boolean save, File... folders) throws Exception {
+    /**
+     * Train a KNN with the training images located in the folders.
+     * @param save  to save the model or not
+     * @param folders  list of folders where the trianing image are located
+     * @return  OpenCV's KNN model
+     * @throws NotDividibleException
+     */
+    private static KNearest trainKnn(boolean save, File... folders) throws NotDividibleException {
         int nbFile = 0;
         for(int i = 0; i < folders.length; i++)
             for(File f : folders[i].listFiles())
@@ -110,7 +129,7 @@ public class Caractarestic {
             totalFound += sum;
             System.out.println("-> " + (int)(sum/fold.listFiles().length * 100) + "%");
         }
-        System.out.println("TOTAL : "+(int)(totalFound/total*100));
+        System.out.println("TOTAL : "+(int)(totalFound/total*100)+"%");
 /*
         Mat res = new Mat();
         Mat testdata = new Mat(new Size(16,1),CvType.CV_32F);
