@@ -37,7 +37,7 @@ public class Caractarestic {
             }
         }
         c+="]";
-        System.out.println(c);
+        //System.out.println(c);
         return vec;
     }
 
@@ -83,48 +83,45 @@ public class Caractarestic {
         File num = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\num").toFile();
         File maj = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\maj").toFile();
         File ponct = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\ponct").toFile();
-        /*int nbFile = 0;
-        for(File f : folder.listFiles()){
-            for(File pic : f.listFiles()){
-                nbFile++;
-            }
-        }
-        Mat traindata = new Mat(new Size(16,nbFile),CvType.CV_32F);
-        Mat labels = new Mat(new Size(1,nbFile),CvType.CV_32F);
-        int line = 0;
-        for(File f : folder.listFiles()){
-            //int charName = (int)Ponct.valueOf(f.getName()).getC();
-            int charName = f.getName().charAt(0);
-            for(File pic : f.listFiles()){
-                labels.put(line,0,charName);
-                try {
-                    Mat im = Image.loadImage(pic.getAbsolutePath());
-                    int[] vec = getVector(im,charName,8);
-                    for(int i=0;i<vec.length;i++){
-                        traindata.put(line,i,vec[i]);
-                    }
-                }
-                catch (NotFileException ex){}
-                line++;
-            }
-
-        }
-        KNearest knn = KNearest.create();
-        knn.train(traindata, Ml.ROW_SAMPLE, labels);
-        knn.save("ocr.txt");*/
 
         KNearest knn = trainKnn(num,maj,ponct);
-
+        File numtest = Paths.get("C:\\Users\\robin.jesson\\Desktop\\numtest").toFile();
+        double total = 0;
+        double totalFound = 0;
+        for(File fold : numtest.listFiles()){
+            System.out.print(fold.getName() + " : ");
+            double sum = 0;
+            for(File img : fold.listFiles()){
+                Mat res = new Mat();
+                Mat testdata = new Mat(new Size(16,1),CvType.CV_32F);
+                Mat lettToTest = Image.loadImage(img.getAbsolutePath(), false);
+                int[] vec = getVector(LetterDetection.cropROI(lettToTest),'0',8);
+                for(int i=0;i<vec.length;i++){
+                    testdata.put(0,i,vec[i]);
+                }
+                float p = knn.findNearest(testdata,6,res);
+                char c = (char)((int)p);
+                System.out.print(c+ " ");
+                if(c==fold.getName().charAt(0))
+                    sum++;
+                total++;
+            }
+            totalFound += sum;
+            System.out.println("-> " + (int)(sum/fold.listFiles().length * 100) + "%");
+        }
+        System.out.println("TOTAL : "+(int)(totalFound/total*100));
+/*
         Mat res = new Mat();
         Mat testdata = new Mat(new Size(16,1),CvType.CV_32F);
 
-        Mat lettToTest = Image.loadImage("C:\\Users\\robin.jesson\\Desktop\\numtest\\12_2_6_0.png", false);
+        Mat lettToTest = Image.loadImage("C:\\Users\\robin.jesson\\Desktop\\numtest\\12_1_3_3.png", false);
         int[] vec = getVector(LetterDetection.cropROI(lettToTest),'0',8);
         for(int i=0;i<vec.length;i++){
             testdata.put(0,i,vec[i]);
         }
 
+
         float p = knn.findNearest(testdata,5,res);
-        System.out.println((char)((int)p));
+        System.out.println((char)((int)p));*/
     }
 }
