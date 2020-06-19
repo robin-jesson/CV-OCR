@@ -119,7 +119,7 @@ public class Caractarestic {
                 for(int i=0;i<vec.length;i++){
                     testdata.put(0,i,vec[i]);
                 }
-                float p = knn.findNearest(testdata,6,res);
+                float p = knn.findNearest(testdata,4,res);
                 char c = (char)((int)p);
                 System.out.print(c+ " ");
                 if(c==fold.getName().charAt(0))
