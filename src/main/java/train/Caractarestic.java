@@ -100,11 +100,19 @@ public class Caractarestic {
 
     public static void main(String[] args) throws Exception {
         OpenCV.loadLocally();
-        File num = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\num").toFile();
-        File maj = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\maj").toFile();
-        File ponct = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\ponct").toFile();
+        boolean train = false;
+        KNearest knn = null;
+        if(train){
+            File num = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\num").toFile();
+            File maj = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\maj").toFile();
+            File ponct = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\ponct").toFile();
 
-        KNearest knn = trainKnn(true, num,maj,ponct);
+           knn = trainKnn(true, num,maj,ponct);
+        }
+        else{
+            knn = KNearest.load("knn.yml");
+        }
+
         File numtest = Paths.get("C:\\Users\\robin.jesson\\Desktop\\numtest").toFile();
         double total = 0;
         double totalFound = 0;
@@ -119,7 +127,7 @@ public class Caractarestic {
                 for(int i=0;i<vec.length;i++){
                     testdata.put(0,i,vec[i]);
                 }
-                float p = knn.findNearest(testdata,4,res);
+                float p = knn.findNearest(testdata,5,res);
                 char c = (char)((int)p);
                 System.out.print(c+ " ");
                 if(c==fold.getName().charAt(0))

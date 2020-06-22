@@ -37,6 +37,11 @@ class DataAugmentation {
         for(File classFolder : folder.listFiles()){
             for(File img : classFolder.listFiles()){
                 Mat ch = Image.loadImage(img.getAbsolutePath(),false);
+                Image.saveImage(dilate(ch),classFolder.getAbsolutePath()+"\\"+ i++ +"dil.png");
+                Image.saveImage(erode(ch),classFolder.getAbsolutePath()+"\\"+ i+"ero.png");
+            }
+            for(File img : classFolder.listFiles()){
+                Mat ch = Image.loadImage(img.getAbsolutePath(),false);
                 for(int a = -30; a <= 30; a += 10){
                     // System.out.println(classFolder.getAbsolutePath()+"\\augm"+a+".png");
                     Image.saveImage(rotation(ch,a),classFolder.getAbsolutePath()+"\\"+ i++ +"augm"+a+".png");
@@ -45,7 +50,7 @@ class DataAugmentation {
         }
     }
 
-    public static Mat rotation(Mat img, int angle){
+    private static Mat rotation(Mat img, int angle){
         Mat rotated = img.clone();
         Mat M = Imgproc.getRotationMatrix2D(new Point(img.width(),img.height()),angle,1);
         RotatedRect rr = new RotatedRect(new Point(),img.size(),angle);
@@ -53,5 +58,14 @@ class DataAugmentation {
 
         return LetterDetection.cropROI(rotated);
     }
+
+    private static Mat erode(Mat img){
+        return LetterDetection.erodeLetters(img);
+    }
+
+    private static Mat dilate(Mat img){
+        return LetterDetection.dilateLetters(img,1);
+    }
+
 
 }
