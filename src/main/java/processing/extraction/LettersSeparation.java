@@ -15,19 +15,14 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.SortedMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LettersSeparation {
-    static{
-        OpenCV.loadLocally();
-    }
-    public static void main(String[] args) throws IOException, NotFileException {
-        File f = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters\\15_1_4_1.png").toFile(); //pé
+
+    /*public static void main(String[] args) throws IOException, NotFileException {
+        File f = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters\\15_2_2_1.png").toFile(); //pé
         Mat img = Image.loadImage(f.getAbsolutePath(),false);
         Path dir = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters");
 
@@ -43,7 +38,7 @@ public class LettersSeparation {
 
         long widthCut = img.width()/nbLtters;
 
-        for(int x=0;x<img.width()-widthCut;x+=widthCut){
+        for(int x=0;x<nbLtters*widthCut;x+=widthCut){
             System.out.println(x+" "+(x+widthCut));
             Rect rect = new Rect(
                     new Point(x,0),
@@ -55,6 +50,24 @@ public class LettersSeparation {
 
 
 
+
+    }*/
+
+    public static List<Mat> serparate(Path dir, File f) throws IOException, NotFileException {
+        Mat img = Image.loadImage(f.getAbsolutePath(),false);
+        int idx = getIndex(dir,f);
+        System.out.println(idx);
+        File[] around = getAroundFiles(idx,20, dir.toFile().listFiles());
+        double m = getMeanWidth(around);
+        long nbLtters = Math.round(img.width()/m);
+        long widthCut = img.width()/nbLtters;
+        List<Mat> letters = new LinkedList<>();
+        for(int x=0;x<nbLtters*widthCut;x+=widthCut){
+            System.out.println(x+" "+(x+widthCut));
+            Rect rect = new Rect(new Point(x,0),new Point(x+widthCut,img.height()));
+            letters.add(new Mat(img,rect));
+        }
+        return letters;
 
     }
 

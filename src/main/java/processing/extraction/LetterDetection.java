@@ -220,8 +220,12 @@ public class LetterDetection {
                 //System.out.println("fin "+i);
             }
         }
-        if(beginsLetters.size()!=endsLetters.size())
+        if(beginsLetters.size()!=endsLetters.size()){
+            //System.err.println("begins size = "+beginsLetters.size());
+            //System.err.println("ends size = "+endsLetters.size());
             throw new DifferentSizeException();
+        }
+
 
         for(int i=0;i<beginsLetters.size();i++) {
             Mat letter = new Mat(BWwordROI, new Rect(new Point(beginsLetters.get(i), 0), new Point(endsLetters.get(i), BWwordROI.rows())));

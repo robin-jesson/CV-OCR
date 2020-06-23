@@ -36,34 +36,39 @@ public class Main {
         Mat warped = PageDetection.detectAndCropPage(img);
         Mat bw = Denoising.removeShadowAndBinarize(warped);
         LinkedList<Mat> textzones = TextDetection.getTextBlock(bw);
-        int i = 0;
+        int progress = 0;
+        int wordCount=0;
+        int letterCount = 0;
         for(Mat roi : textzones) {
-            progressBar(i,textzones.size()-1);
+            progressBar(progress,textzones.size()-1);
             Mat deskewed = Deskewing.deskewByHough(roi);
-            Image.saveImage(deskewed,"roi/deskew/"+i+".png");
+            //Image.saveImage(deskewed,"roi/deskew/"+i+".png");
             LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
-            int j = 0;
+
             for(Mat line : lines){
-                int k=0;
                 if(!line.empty()){
-                    Image.saveImage(line,"roi/crop/"+i+"_"+ j++ +".jpg");
                     List<Mat> words = LetterDetection.detectWordsOfLine(line);
-                    int l = 0;
                     for(Mat word : words){
-                        Image.saveImage(LetterDetection.cropROI(word),"roi/words/"+i+"_"+ j +"_"+ k++ +".png");
+                        //Image.saveImage(word,"roi/words/"+createNumberString(wordCount)+".png");
                         try {
                             List<Mat> letters = LetterDetection.detectLettersOfWord(word);
+
                             for(Mat letter : letters){
-                                Image.saveImage(letter,"roi/letters/"+i+"_"+ j +"_"+ k + "_"+ l++ +".png");
+                                Image.saveImage(letter,"roi/letters/"+createFilename(wordCount,letterCount++)+".png");
                             }
-                        } catch (TooSmallWidthOrHeightException | DifferentSizeException e) {/* do nothing */}
-                        l=0;
+
+                        }
+                        catch (TooSmallWidthOrHeightException e) {}
+                        catch (DifferentSizeException e) {
+                            //System.err.println(e);
+                            //Image.imshow(word,500);
+                        }
                     }
+                    wordCount++;
+                    letterCount = 0;
                 }
-                k=0;
             }
-            j = 0;
-            i++;
+            progress++;
         }
     }
 
@@ -72,17 +77,17 @@ public class Main {
      */
     public static void initFolder() {
         try {
-            Path cropPath = Paths.get("./roi/crop");
-            Path deskewPath = Paths.get("./roi/deskew");
-            Path wordsPath = Paths.get("./roi/words");
+            //Path cropPath = Paths.get("./roi/crop");
+            //Path deskewPath = Paths.get("./roi/deskew");
+            //Path wordsPath = Paths.get("./roi/words");
             Path lettersPath = Paths.get("./roi/letters");
-            FileUtils.deleteDirectory(cropPath.toFile());
-            FileUtils.deleteDirectory(deskewPath.toFile());
-            FileUtils.deleteDirectory(wordsPath.toFile());
+            //FileUtils.deleteDirectory(cropPath.toFile());
+            //FileUtils.deleteDirectory(deskewPath.toFile());
+            //FileUtils.deleteDirectory(wordsPath.toFile());
             FileUtils.deleteDirectory(lettersPath.toFile());
-            Files.createDirectories(cropPath).toAbsolutePath();
-            Files.createDirectories(deskewPath);
-            Files.createDirectories(wordsPath);
+            //Files.createDirectories(cropPath).toAbsolutePath();
+            //Files.createDirectories(deskewPath);
+            //Files.createDirectories(wordsPath);
             Files.createDirectories(lettersPath);
 
         } catch (IOException e) {
@@ -106,6 +111,27 @@ public class Main {
         }
         pB+="|"+percent+"\r";
         System.out.print(pB);
+    }
+
+    private static String createFilename(int k, int l){
+        return createNumberString(k)+"_"+createNumberString(l);
+    }
+
+    private static String createNumberString(int k){
+        String s = "";
+        if(k<10){
+            s += "000";
+        }
+        else if(k<100){
+            s += "00";
+        }
+        else if(k<1000){
+            s += "0";
+        }
+        else {
+            s += "";
+        }
+        return s + k;
     }
 
 
