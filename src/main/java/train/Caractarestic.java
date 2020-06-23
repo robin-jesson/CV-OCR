@@ -26,7 +26,7 @@ public class Caractarestic {
      * @return vector creatd from the letter
      * @throws NotDividibleException  step must divide 32
      */
-    private static int[] getVector(Mat letter, int charNb ,int step) throws NotDividibleException {
+    private static int[] getVector(Mat letter, int charNb ,int step, String fileName) throws NotDividibleException {
         if(32%step!=0) throw new NotDividibleException();
         int[] vec = new int[(32/step) * (32/step)];
         Mat m = new Mat();
@@ -36,7 +36,12 @@ public class Caractarestic {
         Mat bw = new Mat();
         Imgproc.threshold(gray,bw,0,255,Imgproc.THRESH_OTSU);*/
         Mat resized = new Mat();
-        Imgproc.resize(letter, resized, new Size(32,32));
+        try {
+            Imgproc.resize(letter, resized, new Size(32, 32));
+        }
+        catch (CvException cve){
+            System.err.println(letter+" "+fileName);
+        }
         int idx = 0;
         for(int i=0;i<32;i+=step){
             for(int j=0;j<32;j+=step){
@@ -82,7 +87,8 @@ public class Caractarestic {
                     labels.put(line,0,charName);
                     try {
                         Mat pic = Image.loadImage(pics[k].getAbsolutePath(), false);
-                        int[] vec = getVector(pic,charName,8);
+                        if(pic.empty()) System.out.println("empty");
+                        int[] vec = getVector(pic,charName,8,pics[k].getAbsolutePath());
                         for(int l=0;l<vec.length;l++){
                             traindata.put(line,l,vec[l]);
                         }
@@ -103,11 +109,12 @@ public class Caractarestic {
         boolean train = false;
         KNearest knn = null;
         if(train){
-            File num = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\num").toFile();
-            File maj = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\maj").toFile();
-            File ponct = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\ponct").toFile();
+            File num = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\num").toFile();
+            File maj = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\maj").toFile();
+            File ponct = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\ponct").toFile();
+            File min = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\min").toFile();
 
-           knn = trainKnn(true, num,maj,ponct);
+           knn = trainKnn(true, num,maj,ponct, min);
         }
         else{
             knn = KNearest.load("knn.yml");
@@ -123,11 +130,11 @@ public class Caractarestic {
                 Mat res = new Mat();
                 Mat testdata = new Mat(new Size(16,1),CvType.CV_32F);
                 Mat lettToTest = Image.loadImage(img.getAbsolutePath(), false);
-                int[] vec = getVector(LetterDetection.cropROI(lettToTest),'0',8);
+                int[] vec = getVector(LetterDetection.cropROI(lettToTest),'0',8,"test file");
                 for(int i=0;i<vec.length;i++){
                     testdata.put(0,i,vec[i]);
                 }
-                float p = knn.findNearest(testdata,5,res);
+                float p = knn.findNearest(testdata,9,res);
                 char c = (char)((int)p);
                 System.out.print(c+ " ");
                 if(c==fold.getName().charAt(0))

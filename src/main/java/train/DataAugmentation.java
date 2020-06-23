@@ -18,17 +18,24 @@ class DataAugmentation {
     public static void main(String[] args) throws NotFileException {
         OpenCV.loadLocally();
 
-        File num = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\num").toFile();
+        /*File num = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\num").toFile();
         File maj = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\maj").toFile();
-        File ponct = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\ponct").toFile();
+        File min = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\min").toFile();
+        File ponct = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\ponct").toFile();*/
 
-        augmentFolders(num,maj,ponct);
+        augmentFolders(TrainFiles.num.getFile(),
+                TrainFiles.maj.getFile(),
+                TrainFiles.min.getFile(),
+                TrainFiles.ponct.getFile());
 
     }
 
     private static void augmentFolders(File... folders) throws NotFileException {
-        for(int i = 0; i<folders.length; i++)
+        for(int i = 0; i<folders.length; i++){
+            System.out.println("Augmentation de "+folders[i].getAbsolutePath());
             augmentFolder(folders[i]);
+        }
+
 
     }
 
