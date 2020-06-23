@@ -2,6 +2,7 @@ package processing.extraction;
 
 import exception.NotFileException;
 import nu.pattern.OpenCV;
+import org.apache.commons.io.FilenameUtils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LettersSeparation {
+    static{
+        OpenCV.loadLocally();
+    }
 
     /*public static void main(String[] args) throws IOException, NotFileException {
         File f = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters\\15_2_2_1.png").toFile(); //pé
@@ -53,19 +57,46 @@ public class LettersSeparation {
 
     }*/
 
-    public static List<Mat> serparate(Path dir, File f) throws IOException, NotFileException {
+    public static void main(String[] args) throws IOException, NotFileException {
+        Path dir = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\badletters");
+        Path goodLetters = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters");
+        double m = getMeanWidth(goodLetters.toFile().listFiles());
+        System.out.println(m);
+        File[] imgs = dir.toFile().listFiles();
+        for(int i=0;i<imgs.length;i++){
+            List<Mat> letters = separate(dir,imgs[i],m);
+            String currentName = FilenameUtils.removeExtension(imgs[i].getName());
+            System.out.println(letters.size());
+            int j=0;
+            for(Mat l : letters){
+                Image.saveImage(l,"C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\badletters\\" +
+                        currentName + "_" + (j++) + ".png");
+                System.out.println(j);
+            }
+
+        }
+    }
+
+    public static List<Mat> separate(Path dir, File f, double m) throws IOException, NotFileException {
         Mat img = Image.loadImage(f.getAbsolutePath(),false);
         int idx = getIndex(dir,f);
-        System.out.println(idx);
-        File[] around = getAroundFiles(idx,20, dir.toFile().listFiles());
-        double m = getMeanWidth(around);
+        //System.out.println(idx);
+        //File[] around = getAroundFiles(idx,20, dir.toFile().listFiles());
+        //double m = getMeanWidth(around);
+
         long nbLtters = Math.round(img.width()/m);
-        long widthCut = img.width()/nbLtters;
         List<Mat> letters = new LinkedList<>();
-        for(int x=0;x<nbLtters*widthCut;x+=widthCut){
-            System.out.println(x+" "+(x+widthCut));
-            Rect rect = new Rect(new Point(x,0),new Point(x+widthCut,img.height()));
-            letters.add(new Mat(img,rect));
+        try {
+            long widthCut = img.width() / nbLtters;
+
+            for (int x = 0; x < nbLtters * widthCut; x += widthCut) {
+                //System.out.println(x+" "+(x+widthCut));
+                Rect rect = new Rect(new Point(x, 0), new Point(x + widthCut, img.height()));
+                letters.add(new Mat(img, rect));
+            }
+            return letters;
+        }
+        catch(ArithmeticException e){
         }
         return letters;
 

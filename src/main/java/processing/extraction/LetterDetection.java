@@ -7,9 +7,7 @@ import org.opencv.features2d.MSER;
 import org.opencv.imgproc.Imgproc;
 import processing.Image;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class LetterDetection {
 
