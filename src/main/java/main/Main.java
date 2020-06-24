@@ -31,7 +31,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws NotFileException {
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\iphone.jpg";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\ipad.jpg";
         Mat img = Image.loadImage(imgSrc);
         Mat warped = PageDetection.detectAndCropPage(img);
         Mat bw = Denoising.removeShadowAndBinarize(warped);

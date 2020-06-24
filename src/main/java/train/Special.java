@@ -1,6 +1,6 @@
 package train;
 
-public enum Ponct {
+public enum Special {
     at('@'),
     brack_l('('),
     brack_r(')'),
@@ -14,10 +14,24 @@ public enum Ponct {
     plus('+'),
     point('.'),
     semic(';'),
-    sharp('#');
+    sharp('#'),
+
+    agrave('à'),
+    eacute('é'),
+    ecirc('ê'),
+    egrave('è'),
+    euml('ë'),
+    i('i'),
+    icirc('î'),
+    iuml('ï'),
+    j('j'),
+    ocirc('ô'),
+    ouml('ö'),
+    ucirc('û'),
+    uuml('ü');
 
     private char c;
-    private Ponct(char c){
+    private Special(char c){
         this.c = c;
     }
 

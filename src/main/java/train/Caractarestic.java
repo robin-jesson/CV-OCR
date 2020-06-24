@@ -10,6 +10,7 @@ import org.opencv.ml.Ml;
 import org.opencv.ml.TrainData;
 import processing.Image;
 import processing.extraction.LetterDetection;
+import recognition.Recognition;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -20,42 +21,44 @@ import java.nio.file.Paths;
 public class Caractarestic {
     /**
      * Create the vector from a letter in black and white.
-     * @param letter  image
-     * @param charNb  character
+     * @param letter  image 1 channel
      * @param step
      * @return vector creatd from the letter
      * @throws NotDividibleException  step must divide 32
      */
-    private static int[] getVector(Mat letter, int charNb ,int step, String fileName) throws NotDividibleException {
+    public static int[] getVector(Mat letter, int step) throws NotDividibleException {
         if(32%step!=0) throw new NotDividibleException();
         int[] vec = new int[(32/step) * (32/step)];
         Mat m = new Mat();
-        String c = ((char)charNb) + "[";
+        //String c = ((char)charNb) + "[";
+
         /*Mat gray = new Mat();
-        Imgproc.cvtColor(letter,gray,Imgproc.COLOR_BGR2GRAY);
+        Imgproc.cvtColor(letter,gray,Imgproc.COLOR_BGR2GRAY);*/
         Mat bw = new Mat();
-        Imgproc.threshold(gray,bw,0,255,Imgproc.THRESH_OTSU);*/
+        Imgproc.threshold(letter,bw,0,255,Imgproc.THRESH_OTSU);
         Mat resized = new Mat();
         try {
-            Imgproc.resize(letter, resized, new Size(32, 32));
+            Imgproc.resize(bw, resized, new Size(32, 32));
+
+            int idx = 0;
+            for(int i=0;i<32;i+=step){
+                for(int j=0;j<32;j+=step){
+                    Rect r = new Rect(new Point(i,j),new Point(i+step,j+step));
+                    Mat temp = new Mat(resized,r);
+                    int whitePix = Core.countNonZero(temp);
+                    vec[idx++]=whitePix;
+                    //if(i!=0 || j!=0) c+=",";
+                    //c+=whitePix;
+                }
+            }
+            //c+="]";
+            //System.out.println(c);
+            return vec;
         }
         catch (CvException cve){
-            System.err.println(letter+" "+fileName);
+            System.err.println("GetVector could not resize");
         }
-        int idx = 0;
-        for(int i=0;i<32;i+=step){
-            for(int j=0;j<32;j+=step){
-                Rect r = new Rect(new Point(i,j),new Point(i+step,j+step));
-                Mat temp = new Mat(resized,r);
-                int whitePix = Core.countNonZero(temp);
-                vec[idx++]=whitePix;
-                if(i!=0 || j!=0) c+=",";
-                c+=whitePix;
-            }
-        }
-        c+="]";
-        //System.out.println(c);
-        return vec;
+        return new int[0];
     }
 
     /**
@@ -77,18 +80,19 @@ public class Caractarestic {
         int line = 0;
         for(int i = 0; i < folders.length; i++){
             File[] subFolders = folders[i].listFiles();
-            boolean isPonct = folders[i].getName().equals("ponct");
+            boolean isPonct = folders[i].getName().equals("ponct") || folders[i].getName().equals("min_acc");
             for(int j=0;j<subFolders.length;j++){
                 int charName = isPonct ?
-                        (int)Ponct.valueOf(subFolders[j].getName()).getC() :
+                        (int)Special.valueOf(subFolders[j].getName()).getC() :
                         subFolders[j].getName().charAt(0);
+                System.out.println("Training of "+(char)charName);
                 File[] pics = subFolders[j].listFiles();
                 for(int k = 0; k < pics.length; k++){
                     labels.put(line,0,charName);
                     try {
                         Mat pic = Image.loadImage(pics[k].getAbsolutePath(), false);
                         if(pic.empty()) System.out.println("empty");
-                        int[] vec = getVector(pic,charName,8,pics[k].getAbsolutePath());
+                        int[] vec = getVector(LetterDetection.cropROI(pic),8);
                         for(int l=0;l<vec.length;l++){
                             traindata.put(line,l,vec[l]);
                         }
@@ -106,38 +110,43 @@ public class Caractarestic {
 
     public static void main(String[] args) throws Exception {
         OpenCV.loadLocally();
-        boolean train = false;
+        boolean train = true;
         KNearest knn = null;
         if(train){
             File num = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\num").toFile();
             File maj = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\maj").toFile();
             File ponct = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\ponct").toFile();
             File min = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\min").toFile();
+            File min_acc = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\min_acc").toFile();
 
-           knn = trainKnn(true, num,maj,ponct, min);
+           knn = trainKnn(true, num,maj,ponct, min, min_acc);
         }
         else{
             knn = KNearest.load("knn.yml");
         }
 
+
+
+
         File numtest = Paths.get("C:\\Users\\robin.jesson\\Desktop\\numtest").toFile();
         double total = 0;
         double totalFound = 0;
         for(File fold : numtest.listFiles()){
-            System.out.print(fold.getName() + " : ");
+            System.out.print(fold.getName().charAt(0) + " : ");
             double sum = 0;
             for(File img : fold.listFiles()){
                 Mat res = new Mat();
                 Mat testdata = new Mat(new Size(16,1),CvType.CV_32F);
                 Mat lettToTest = Image.loadImage(img.getAbsolutePath(), false);
-                int[] vec = getVector(LetterDetection.cropROI(lettToTest),'0',8,"test file");
+                int[] vec = getVector(LetterDetection.cropROI(lettToTest),8);
                 for(int i=0;i<vec.length;i++){
                     testdata.put(0,i,vec[i]);
                 }
-                float p = knn.findNearest(testdata,9,res);
+                float p = knn.findNearest(testdata,5,res);
                 char c = (char)((int)p);
                 System.out.print(c+ " ");
-                if(c==fold.getName().charAt(0))
+                String s ="zzz";
+                if(Character.toLowerCase(c)==Character.toLowerCase(fold.getName().charAt(0)))
                     sum++;
                 total++;
             }
