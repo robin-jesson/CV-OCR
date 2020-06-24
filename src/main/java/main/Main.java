@@ -54,9 +54,11 @@ public class Main {
                             List<Mat> letters = LetterDetection.detectLettersOfWord(word);
 
                             for(Mat letter : letters){
-                                Image.saveImage(letter,"roi/letters/"+createFilename(wordCount,letterCount++)+".png");
+
                                 if(letter.height()<letter.width())
-                                    Image.saveImage(letter,"roi/badletters/"+createFilename(wordCount,letterCount++)+".png");
+                                    Image.saveImage(letter,"roi/badletters/"+createFilename(wordCount,letterCount++)+"_00.png");
+                                else
+                                    Image.saveImage(letter,"roi/letters/"+createFilename(wordCount,letterCount++)+"_00.png");
                             }
 
                         }
@@ -80,21 +82,15 @@ public class Main {
      */
     public static void initFolder() {
         try {
-            //Path cropPath = Paths.get("./roi/crop");
-            //Path deskewPath = Paths.get("./roi/deskew");
-            //Path wordsPath = Paths.get("./roi/words");
             Path lettersPath = Paths.get("./roi/letters");
             Path badlettersPath = Paths.get("./roi/badletters");
-            //FileUtils.deleteDirectory(cropPath.toFile());
-            //FileUtils.deleteDirectory(deskewPath.toFile());
-            //FileUtils.deleteDirectory(wordsPath.toFile());
+            Path correctedlettersPath = Paths.get("./roi/correctedletters");
             FileUtils.deleteDirectory(lettersPath.toFile());
             FileUtils.deleteDirectory(badlettersPath.toFile());
-            //Files.createDirectories(cropPath).toAbsolutePath();
-            //Files.createDirectories(deskewPath);
-            //Files.createDirectories(wordsPath);
+            FileUtils.deleteDirectory(correctedlettersPath.toFile());
             Files.createDirectories(lettersPath);
             Files.createDirectories(badlettersPath);
+            Files.createDirectories(correctedlettersPath);
 
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize folder for upload!");

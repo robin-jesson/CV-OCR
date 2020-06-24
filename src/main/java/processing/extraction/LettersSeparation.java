@@ -66,12 +66,14 @@ public class LettersSeparation {
         for(int i=0;i<imgs.length;i++){
             List<Mat> letters = separate(dir,imgs[i],m);
             String currentName = FilenameUtils.removeExtension(imgs[i].getName());
-            System.out.println(letters.size());
+            String[] splitted = currentName.split("_");
+            String newName = splitted[0]+"_"+splitted[1]+"_";
             int j=0;
             for(Mat l : letters){
-                Image.saveImage(l,"C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\badletters\\" +
-                        currentName + "_" + (j++) + ".png");
-                System.out.println(j);
+                Image.saveImage(l,"C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\correctedletters\\" +
+                        newName + createNumberName(j++) + ".png");
+                Image.saveImage(l,"C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters\\" +
+                        newName + createNumberName(j) + ".png");
             }
 
         }
@@ -135,5 +137,13 @@ public class LettersSeparation {
             s += m.width();
         }
         return s/around.length;
+    }
+
+    private static String createNumberName(int i){
+        if(i>=100 || i<0)
+            throw new UnsupportedOperationException("i must be between 0 and 100 excluded.");
+        if(i>=10) return ""+i;
+        else
+            return "0"+i;
     }
 }
