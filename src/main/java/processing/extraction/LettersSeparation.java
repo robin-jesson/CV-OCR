@@ -1,6 +1,7 @@
 package processing.extraction;
 
 import exception.NotFileException;
+import exception.TooHighNumberException;
 import nu.pattern.OpenCV;
 import org.apache.commons.io.FilenameUtils;
 import org.opencv.core.CvType;
@@ -70,10 +71,13 @@ public class LettersSeparation {
             String newName = splitted[0]+"_"+splitted[1]+"_";
             int j=0;
             for(Mat l : letters){
-                Image.saveImage(l,"C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\correctedletters\\" +
-                        newName + createNumberName(j++) + ".png");
-                Image.saveImage(l,"C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters\\" +
-                        newName + createNumberName(j) + ".png");
+                try {
+                    Image.saveImage(l, "C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\correctedletters\\" +
+                            newName + createNumberName(j++) + ".png");
+                    Image.saveImage(l, "C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters\\" +
+                            newName + createNumberName(j) + ".png");
+                }
+                catch (TooHighNumberException e){}
             }
 
         }
@@ -139,9 +143,9 @@ public class LettersSeparation {
         return s/around.length;
     }
 
-    private static String createNumberName(int i){
+    private static String createNumberName(int i) throws TooHighNumberException {
         if(i>=100 || i<0)
-            throw new UnsupportedOperationException("i must be between 0 and 100 excluded.");
+            throw new TooHighNumberException();
         if(i>=10) return ""+i;
         else
             return "0"+i;

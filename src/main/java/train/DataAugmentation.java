@@ -23,10 +23,7 @@ class DataAugmentation {
         File min = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\min").toFile();
         File ponct = Paths.get("C:\\Users\\robin.jesson\\Documents\\letters\\ponct").toFile();*/
 
-        augmentFolders(TrainFiles.num.getFile(),
-                TrainFiles.maj.getFile(),
-                TrainFiles.min.getFile(),
-                TrainFiles.ponct.getFile());
+        augmentFolders(TrainFiles.min_acc.getFile());
 
     }
 

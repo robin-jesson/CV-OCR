@@ -40,22 +40,22 @@ public class Recognition {
             if(currentWordNum==null || !currentWordNum.equals(wordNum)) {
                 currentWordNum = wordNum;
                 System.out.println(currentWordNum);
-                res += " ";
+                res += "\n";
             }
 
             System.out.print(imgFile.getName()+" -> ");
             try {
                 Mat pic = Image.loadImage(imgFile.getAbsolutePath(), false);
                 Mat resKnn = new Mat();
-                Mat testdata = new Mat(new Size(16,1), CvType.CV_32F);
-                int[] vec = Caractarestic.getVector(LetterDetection.cropROI(pic),8);
+                Mat testdata = new Mat(new Size(49,1), CvType.CV_32F);
+                int[] vec = Caractarestic.getVector(LetterDetection.cropROI(pic));
                 for(int i=0;i<vec.length;i++){
                     testdata.put(0,i,vec[i]);
                 }
                 float p = knn.findNearest(testdata,9,resKnn);
                 System.out.println((char)p);
                 res += (char)((int)p);
-            } catch (NotFileException | NotDividibleException e) {
+            } catch (NotFileException e) {
             }
         }
         return res;

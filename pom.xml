@@ -24,6 +24,33 @@
             <artifactId>tess4j</artifactId>
             <version>4.5.1</version>
         </dependency>
+        <!--
+            %maven ai.djl:api:0.6.0
+            %maven org.slf4j:slf4j-api:1.7.26
+            %maven org.slf4j:slf4j-simple:1.7.26
+            %maven ai.djl.mxnet:mxnet-native-auto:1.7.0-a
+        -->
+        <dependency>
+            <groupId>ai.djl</groupId>
+            <artifactId>api</artifactId>
+            <version>0.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.26</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.26</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.pytorch</groupId>
+            <artifactId>pytorch-engine</artifactId>
+            <version>0.6.0</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
 </project>

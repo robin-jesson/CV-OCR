@@ -15,6 +15,7 @@ import recognition.Recognition;
 import java.io.File;
 import java.nio.file.Paths;
 
+
 /**
  * Caracteristic vectors and KNN model
  */
@@ -26,14 +27,14 @@ public class Caractarestic {
      * @return vector creatd from the letter
      * @throws NotDividibleException  step must divide 32
      */
-    public static int[] getVector(Mat letter, int step) throws NotDividibleException {
+    /*public static int[] getVector(Mat letter, int step) throws NotDividibleException {
         if(32%step!=0) throw new NotDividibleException();
         int[] vec = new int[(32/step) * (32/step)];
         Mat m = new Mat();
         //String c = ((char)charNb) + "[";
 
-        /*Mat gray = new Mat();
-        Imgproc.cvtColor(letter,gray,Imgproc.COLOR_BGR2GRAY);*/
+        //Mat gray = new Mat();
+        //Imgproc.cvtColor(letter,gray,Imgproc.COLOR_BGR2GRAY);
         Mat bw = new Mat();
         Imgproc.threshold(letter,bw,0,255,Imgproc.THRESH_OTSU);
         Mat resized = new Mat();
@@ -59,6 +60,29 @@ public class Caractarestic {
             System.err.println("GetVector could not resize");
         }
         return new int[0];
+    }*/
+
+    public static int[] getVector(Mat letter){
+        int[] vec = new int[49];
+        Mat bw = new Mat();
+        Imgproc.threshold(letter,bw,0,255,Imgproc.THRESH_OTSU);
+        Mat resized = new Mat();
+        try {
+            Imgproc.resize(bw, resized, new Size(32, 32));
+            int idx = 0;
+            for(int i=0; i<=24; i+=4){
+                for(int j=0; j<=24; j+=4){
+                    Rect r = new Rect(new Point(i,j), new Point(i+8,j+8));
+                    Mat temp = new Mat(resized,r);
+                    vec[idx++]=Core.countNonZero(temp);
+                }
+            }
+            return vec;
+        }
+        catch (CvException cve){
+            System.err.println("GetVector could not resize");
+            return new int[0];
+        }
     }
 
     /**
@@ -75,7 +99,7 @@ public class Caractarestic {
                 for(File pic : f.listFiles())
                     nbFile++;
 
-        Mat traindata = new Mat(new Size(16,nbFile),CvType.CV_32F);
+        Mat traindata = new Mat(new Size(49,nbFile),CvType.CV_32F);
         Mat labels = new Mat(new Size(1,nbFile),CvType.CV_32F);
         int line = 0;
         for(int i = 0; i < folders.length; i++){
@@ -92,7 +116,7 @@ public class Caractarestic {
                     try {
                         Mat pic = Image.loadImage(pics[k].getAbsolutePath(), false);
                         if(pic.empty()) System.out.println("empty");
-                        int[] vec = getVector(LetterDetection.cropROI(pic),8);
+                        int[] vec = getVector(LetterDetection.cropROI(pic));
                         for(int l=0;l<vec.length;l++){
                             traindata.put(line,l,vec[l]);
                         }
@@ -136,9 +160,9 @@ public class Caractarestic {
             double sum = 0;
             for(File img : fold.listFiles()){
                 Mat res = new Mat();
-                Mat testdata = new Mat(new Size(16,1),CvType.CV_32F);
+                Mat testdata = new Mat(new Size(49,1),CvType.CV_32F);
                 Mat lettToTest = Image.loadImage(img.getAbsolutePath(), false);
-                int[] vec = getVector(LetterDetection.cropROI(lettToTest),8);
+                int[] vec = getVector(LetterDetection.cropROI(lettToTest));
                 for(int i=0;i<vec.length;i++){
                     testdata.put(0,i,vec[i]);
                 }
@@ -154,18 +178,5 @@ public class Caractarestic {
             System.out.println("-> " + (int)(sum/fold.listFiles().length * 100) + "%");
         }
         System.out.println("TOTAL : "+(int)(totalFound/total*100)+"%");
-/*
-        Mat res = new Mat();
-        Mat testdata = new Mat(new Size(16,1),CvType.CV_32F);
-
-        Mat lettToTest = Image.loadImage("C:\\Users\\robin.jesson\\Desktop\\numtest\\12_1_3_3.png", false);
-        int[] vec = getVector(LetterDetection.cropROI(lettToTest),'0',8);
-        for(int i=0;i<vec.length;i++){
-            testdata.put(0,i,vec[i]);
-        }
-
-
-        float p = knn.findNearest(testdata,5,res);
-        System.out.println((char)((int)p));*/
     }
 }

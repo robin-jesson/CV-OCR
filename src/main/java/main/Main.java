@@ -42,7 +42,9 @@ public class Main {
         for(Mat roi : textzones) {
             progressBar(progress,textzones.size()-1);
             Mat deskewed = Deskewing.deskewByHough(roi);
-            //Image.saveImage(deskewed,"roi/deskew/"+i+".png");
+            Mat whiteBackground = new Mat();
+            Core.bitwise_not(deskewed,whiteBackground);
+            Image.saveImage(whiteBackground,"roi/blocs/"+createNumberString(wordCount)+".png");
             LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
 
             for(Mat line : lines){
@@ -82,12 +84,15 @@ public class Main {
      */
     public static void initFolder() {
         try {
+            Path blocsPath = Paths.get("./roi/blocs");
             Path lettersPath = Paths.get("./roi/letters");
             Path badlettersPath = Paths.get("./roi/badletters");
             Path correctedlettersPath = Paths.get("./roi/correctedletters");
+            FileUtils.deleteDirectory(blocsPath.toFile());
             FileUtils.deleteDirectory(lettersPath.toFile());
             FileUtils.deleteDirectory(badlettersPath.toFile());
             FileUtils.deleteDirectory(correctedlettersPath.toFile());
+            Files.createDirectories(blocsPath);
             Files.createDirectories(lettersPath);
             Files.createDirectories(badlettersPath);
             Files.createDirectories(correctedlettersPath);
