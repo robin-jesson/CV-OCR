@@ -3,24 +3,22 @@ package main;
 import exception.DifferentSizeException;
 import exception.NotFileException;
 import exception.TooSmallWidthOrHeightException;
-import org.opencv.imgproc.Imgproc;
 import processing.extraction.LetterDetection;
+import processing.extraction.LettersSeparation;
 import processing.extraction.TextDetection;
 import nu.pattern.OpenCV;
-import org.apache.commons.io.FileUtils;
 import org.opencv.core.*;
 import processing.preprocessing.Denoising;
 import processing.preprocessing.Deskewing;
 import processing.preprocessing.PageDetection;
 import processing.Image;
+import recognition.Recognition;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static main.UtilsMain.*;
 
 
 public class Main {
@@ -30,8 +28,14 @@ public class Main {
         initFolder();
     }
 
-    public static void main(String[] args) throws NotFileException {
+    public static void main(String[] args) throws NotFileException, IOException {
         String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\ipad.jpg";
+        extraction(imgSrc);
+        letterSeparation();
+        recognition();
+    }
+
+    private static void extraction(String imgSrc) throws NotFileException {
         Mat img = Image.loadImage(imgSrc);
         Mat warped = PageDetection.detectAndCropPage(img);
         Mat bw = Denoising.removeShadowAndBinarize(warped);
@@ -79,67 +83,15 @@ public class Main {
         }
     }
 
-    /**
-     * initialize folder to store temporary image
-     */
-    public static void initFolder() {
-        try {
-            Path blocsPath = Paths.get("./roi/blocs");
-            Path lettersPath = Paths.get("./roi/letters");
-            Path badlettersPath = Paths.get("./roi/badletters");
-            Path correctedlettersPath = Paths.get("./roi/correctedletters");
-            FileUtils.deleteDirectory(blocsPath.toFile());
-            FileUtils.deleteDirectory(lettersPath.toFile());
-            FileUtils.deleteDirectory(badlettersPath.toFile());
-            FileUtils.deleteDirectory(correctedlettersPath.toFile());
-            Files.createDirectories(blocsPath);
-            Files.createDirectories(lettersPath);
-            Files.createDirectories(badlettersPath);
-            Files.createDirectories(correctedlettersPath);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Could not initialize folder for upload!");
-        }
+    private static void letterSeparation() throws IOException, NotFileException {
+        LettersSeparation.separateFolders();
     }
 
-    /**
-     * Write a pourcentage progressing bar.
-     * @param curr  current state
-     * @param max  maximum state
-     */
-    private static void progressBar(int curr, int max){
-        int percent = (int)((double)curr/max*100);
-        String pB = "|";
-        for(int i = 0; i<percent; i++){
-            pB+="#";
-        }
-        for(int i = percent;i<100;i++){
-            pB+=" ";
-        }
-        pB+="|"+percent+"\r";
-        System.out.print(pB);
+    private static String recognition() throws IOException {
+        return Recognition.recognise();
     }
 
-    private static String createFilename(int k, int l){
-        return createNumberString(k)+"_"+createNumberString(l);
-    }
 
-    private static String createNumberString(int k){
-        String s = "";
-        if(k<10){
-            s += "000";
-        }
-        else if(k<100){
-            s += "00";
-        }
-        else if(k<1000){
-            s += "0";
-        }
-        else {
-            s += "";
-        }
-        return s + k;
-    }
 
 
 }

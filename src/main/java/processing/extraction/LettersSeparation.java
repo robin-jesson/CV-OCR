@@ -58,7 +58,7 @@ public class LettersSeparation {
 
     }*/
 
-    public static void main(String[] args) throws IOException, NotFileException {
+    public static void separateFolders() throws IOException, NotFileException {
         Path dir = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\badletters");
         Path goodLetters = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters");
         double m = getMeanWidth(goodLetters.toFile().listFiles());
