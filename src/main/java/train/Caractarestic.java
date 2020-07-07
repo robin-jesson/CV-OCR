@@ -23,7 +23,6 @@ public class Caractarestic {
     /**
      * Create the vector from a letter in black and white.
      * @param letter  image 1 channel
-     * @param step
      * @return vector creatd from the letter
      * @throws NotDividibleException  step must divide 32
      */
@@ -128,7 +127,7 @@ public class Caractarestic {
 
         KNearest knn = KNearest.create();
         knn.train(traindata, Ml.ROW_SAMPLE, labels);
-        knn.save("knn.yml");
+        if(save) knn.save("knn.yml");
         return knn;
     }
 

@@ -36,7 +36,7 @@ public class UtilsMain {
      * @param curr  current state
      * @param max  maximum state
      */
-    protected static void progressBar(int curr, int max){
+    public static void progressBar(int curr, int max){
         int percent = (int)((double)curr/max*100);
         String pB = "|";
         for(int i = 0; i<percent; i++){

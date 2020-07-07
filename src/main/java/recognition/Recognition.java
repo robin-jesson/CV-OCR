@@ -31,7 +31,7 @@ public class Recognition {
     public static String recognise() throws IOException {
         String res = "";
         var knn = KNearest.load("knn.yml");
-        var dir = Paths.get("roi/letters");
+        var dir = Paths.get("roi/Sport");
         var paths = Files.newDirectoryStream(dir);
         String currentWordNum = null;
         for(Path path: paths){
@@ -61,7 +61,7 @@ public class Recognition {
         return res;
     }
 
-    /*public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         System.out.println(recognise());
-    }*/
+    }
 }

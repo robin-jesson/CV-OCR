@@ -2,6 +2,7 @@ package processing.extraction;
 
 import exception.NotFileException;
 import exception.TooHighNumberException;
+import main.UtilsMain;
 import nu.pattern.OpenCV;
 import org.apache.commons.io.FilenameUtils;
 import org.opencv.core.CvType;
@@ -65,6 +66,7 @@ public class LettersSeparation {
         System.out.println(m);
         File[] imgs = dir.toFile().listFiles();
         for(int i=0;i<imgs.length;i++){
+            UtilsMain.progressBar(i,imgs.length);
             List<Mat> letters = separate(dir,imgs[i],m);
             String currentName = FilenameUtils.removeExtension(imgs[i].getName());
             String[] splitted = currentName.split("_");

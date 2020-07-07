@@ -29,13 +29,13 @@ public class Main {
     }
 
     public static void main(String[] args) throws NotFileException, IOException {
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\ipad.jpg";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\cvr.png";
         extraction(imgSrc);
-        letterSeparation();
         recognition();
     }
 
-    private static void extraction(String imgSrc) throws NotFileException {
+    private static void extraction(String imgSrc) throws NotFileException, IOException {
+        System.out.println("Letter extraction");
         Mat img = Image.loadImage(imgSrc);
         Mat warped = PageDetection.detectAndCropPage(img);
         Mat bw = Denoising.removeShadowAndBinarize(warped);
@@ -81,6 +81,9 @@ public class Main {
             }
             progress++;
         }
+
+        System.out.println("Letters separation when needed");
+        letterSeparation();
     }
 
     private static void letterSeparation() throws IOException, NotFileException {
