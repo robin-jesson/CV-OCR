@@ -2,24 +2,43 @@ package recognition;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class TextProcessing {
+    private String fullText;
     private String[] words;
 
     public TextProcessing(String text){
+        fullText = text;
         words = text.split("[ \n]");
     }
 
     private String findPhone(){
+        String s = "";
         String[] patterns = new String[]{"06", "07", "+33"};
         for(int w = 0; w < words.length; w++){
+            boolean isPhone = false;
             for(int p=0; p<3; p++){
-                if(words[w].contains(patterns[p])){
-
+                if(words[w].contains(patterns[p])) {
+                    for(int i = 0; i<5; i++)
+                        s += words[w+i];
                 }
             }
         }
-        return "";
+        return s;
+    }
+
+    private String findPhone2(){
+        //0?[0-9]\s?([0-9]{2}\s?){4}
+        //(\+.?.?.?\s)?([0-9]\s?){5,15}
+
+        List<String> matches = Pattern.compile("\\+?([0-9]\\s?){6,15}").matcher(fullText).results()
+                .map(MatchResult::group).collect(Collectors.toList());
+        return matches.size()==1 ? matches.get(0) : "";
     }
 
     private String findEmail(){
@@ -61,7 +80,7 @@ public class TextProcessing {
         cvElts.put("lastname",findNames().get("lastname"));
         cvElts.put("firstname",findNames().get("firstname"));
         cvElts.put("email",findEmail());
-        cvElts.put("phone","");
+        cvElts.put("phone",findPhone2());
         return cvElts;
     }
 
@@ -112,7 +131,7 @@ public class TextProcessing {
                 "2017 — (2020) : Université de Technologie de Beifort-Montbéliard\n" +
                 "3* année de diplôme d’ingénieur en informatique — filière Image Interaction et Réalité Virtuelle.\n" +
                 " 16 rue du tanguedorc — 07100 Lesdins\n" +
-                "06 20 86 38 93 robin jesson@utbm.fr\n" +
+                "+33 6 20 86 38 93 robin jesson@utbm.fr\n" +
                 "19 juin 1597 — 72 ans\n" +
                 " imagerie et réalité virtuelle\n" +
                 " Robin JESSON\n" +
