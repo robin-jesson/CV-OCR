@@ -1,21 +1,9 @@
 package recognition;
 
-import ai.djl.Application;
-import ai.djl.ModelException;
-import ai.djl.inference.Predictor;
-import ai.djl.modality.cv.output.DetectedObjects;
-import ai.djl.repository.zoo.Criteria;
-import ai.djl.repository.zoo.ModelZoo;
-import ai.djl.repository.zoo.ZooModel;
-import ai.djl.training.util.ProgressBar;
-import ai.djl.translate.TranslateException;
-import ai.djl.modality.cv.util.BufferedImageUtils;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
 
 
@@ -30,6 +18,7 @@ public class TesseractOCR {
         TesseractOCR.tess.setTessVariable("user_defined_dpi", "70");
     }
 
+
     public static void main(String[] args) {
         File file = Paths.get("roi/blocs").toFile();
         String s = "";
@@ -43,6 +32,8 @@ public class TesseractOCR {
             }
         }
         System.out.println(s);
+        TextProcessing tp = new TextProcessing(s);
+        System.out.println(tp.getCvInfo());
 
 
     }

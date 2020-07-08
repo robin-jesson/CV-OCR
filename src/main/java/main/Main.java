@@ -29,7 +29,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws NotFileException, IOException {
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\cvr.png";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\iphone.jpg";
         extraction(imgSrc);
         recognition();
     }
