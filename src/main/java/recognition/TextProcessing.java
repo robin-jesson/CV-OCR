@@ -17,41 +17,21 @@ public class TextProcessing {
         words = text.split("[ \n]");
     }
 
-    private String findPhone(){
-        String s = "";
-        String[] patterns = new String[]{"06", "07", "+33"};
-        for(int w = 0; w < words.length; w++){
-            boolean isPhone = false;
-            for(int p=0; p<3; p++){
-                if(words[w].contains(patterns[p])) {
-                    for(int i = 0; i<5; i++)
-                        s += words[w+i];
-                }
-            }
-        }
-        return s;
-    }
-
     private String findPhone2(){
-        //0?[0-9]\s?([0-9]{2}\s?){4}
-        //(\+.?.?.?\s)?([0-9]\s?){5,15}
-
         List<String> matches = Pattern.compile("\\+?([0-9]\\s?){6,15}").matcher(fullText).results()
                 .map(MatchResult::group).collect(Collectors.toList());
         return matches.size()==1 ? matches.get(0) : "";
     }
 
-    private String findEmail(){
-        for(int i = 0; i < words.length; i++){
-            if(words[i].contains("@"))
-                return words[i];
-        }
-        return "";
+    private String findEmail2(){
+        List<String> matches = Pattern.compile("[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]{2,3}").matcher(fullText).results()
+                .map(MatchResult::group).collect(Collectors.toList());
+        return matches.size()==1 ? matches.get(0) : "";
     }
 
     private HashMap<String ,String> findNames(){
         HashMap<String, String> names = new HashMap<>();
-        String email = findEmail();
+        String email = findEmail2();
         if(email.isEmpty()){
             names.put("lastname","");
             names.put("firstname","");
@@ -64,8 +44,8 @@ public class TextProcessing {
                 names.put("firstname",identities[1]);
             }
             else if(identities.length==1){
-                names.put("firstname",identities[0]);
-                names.put("lastname","");
+                names.put("lastname",identities[0]);
+                names.put("firstname","");
             }
             else{
                 names.put("lastname","");
@@ -79,7 +59,7 @@ public class TextProcessing {
         HashMap<String, String> cvElts = new HashMap<>();
         cvElts.put("lastname",findNames().get("lastname"));
         cvElts.put("firstname",findNames().get("firstname"));
-        cvElts.put("email",findEmail());
+        cvElts.put("email",findEmail2());
         cvElts.put("phone",findPhone2());
         return cvElts;
     }
