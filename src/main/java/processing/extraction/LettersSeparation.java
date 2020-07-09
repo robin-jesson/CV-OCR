@@ -2,14 +2,12 @@ package processing.extraction;
 
 import exception.NotFileException;
 import exception.TooHighNumberException;
-import main.UtilsMain;
+import main.Utils;
 import nu.pattern.OpenCV;
 import org.apache.commons.io.FilenameUtils;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
 import processing.Image;
 
 import java.io.File;
@@ -19,8 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class LettersSeparation {
     static{
@@ -66,7 +62,7 @@ public class LettersSeparation {
         System.out.println(m);
         File[] imgs = dir.toFile().listFiles();
         for(int i=0;i<imgs.length;i++){
-            UtilsMain.progressBar(i,imgs.length);
+            Utils.progressBar(i,imgs.length);
             List<Mat> letters = separate(dir,imgs[i],m);
             String currentName = FilenameUtils.removeExtension(imgs[i].getName());
             String[] splitted = currentName.split("_");

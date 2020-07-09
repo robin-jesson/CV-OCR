@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import static main.UtilsMain.*;
+import static main.Utils.*;
 
 
 public class Main {

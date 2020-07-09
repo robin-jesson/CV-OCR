@@ -1,5 +1,6 @@
 package recognition;
 
+import main.Utils;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
@@ -22,16 +23,15 @@ public class TesseractOCR {
     public static void main(String[] args) {
         File file = Paths.get("roi/blocs").toFile();
         String s = "";
-        for(File block : file.listFiles()){
-            System.out.println(block.getName());
+        File[] blocks = file.listFiles();
+        for(int b = 0; b < blocks.length; b++){
             try {
-                s += TesseractOCR.tess.doOCR(block);
-                s+=" ";
+                s += TesseractOCR.tess.doOCR(blocks[b]) + " ";
             } catch (TesseractException e) {
                 e.printStackTrace();
             }
+            Utils.progressBar(b,blocks.length);
         }
-        System.out.println(s);
         TextProcessing tp = new TextProcessing(s);
         System.out.println(tp.getCvInfo());
 

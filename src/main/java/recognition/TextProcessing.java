@@ -16,7 +16,7 @@ public class TextProcessing {
     }
 
     private String findPhone(){
-        List<String> matches = Pattern.compile("\\+?([0-9][ .]?){6,}[0-9]")
+        List<String> matches = Pattern.compile("\\+?([0-9][ .]?){6,12}[0-9]")
                 .matcher(this.fullText)
                 .results()
                 .map(MatchResult::group)
@@ -76,7 +76,7 @@ public class TextProcessing {
         String s = "Février 2017 à juillet 2017\n" +
                 " Humanité et\n" +
                 " dement-michel1@utt-fr\n" +
-                "+336.04.08.92.45\n" +
+                "+33 6.04.08.92.45\n" +
                 "15 rue Lucien Morel Payen,\n" +
                 "10000 Troyes,";
         TextProcessing tp = new TextProcessing(s);
