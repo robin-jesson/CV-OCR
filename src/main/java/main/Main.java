@@ -12,7 +12,10 @@ import processing.preprocessing.Denoising;
 import processing.preprocessing.Deskewing;
 import processing.preprocessing.PageDetection;
 import processing.Image;
-import recognition.Recognition;
+import recognition.IRecognition;
+import recognition.KnnOCR;
+import recognition.TesseractOCR;
+import recognition.TextProcessing;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -29,9 +32,18 @@ public class Main {
     }
 
     public static void main(String[] args) throws NotFileException, IOException {
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\iphone.jpg";
+        long startTime = System.currentTimeMillis();
+
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\ipad.jpg";
         extraction(imgSrc);
-        recognition();
+        String txt = recognition(new TesseractOCR());
+        Utils.write(txt);
+        TextProcessing tp = new TextProcessing(txt);
+        System.out.println(tp.getCvInfo());
+
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        System.out.println("Temps exec = "+elapsedTime/1000);
+
     }
 
     private static void extraction(String imgSrc) throws NotFileException, IOException {
@@ -90,8 +102,8 @@ public class Main {
         LettersSeparation.separateFolders();
     }
 
-    private static String recognition() throws IOException {
-        return Recognition.recognise();
+    private static String recognition(IRecognition recognizer) throws IOException {
+        return recognizer.recognize();
     }
 
 

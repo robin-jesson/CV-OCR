@@ -9,18 +9,18 @@ import java.nio.file.Paths;
 
 
 
-public class TesseractOCR {
+public class TesseractOCR implements IRecognition{
     private static Tesseract tess;
 
     static{
         TesseractOCR.tess = new Tesseract();
-        TesseractOCR.tess.setDatapath("C:\\Users\\robin.jesson\\Downloads\\tesseract-2.00.fra.tar\\tesseract-2.00.fra\\tessdata");
+        TesseractOCR.tess.setDatapath("src/main/resources");
         TesseractOCR.tess.setLanguage("fra");
         TesseractOCR.tess.setTessVariable("user_defined_dpi", "70");
     }
 
-
-    public static void main(String[] args) {
+    @Override
+    public String recognize(){
         File file = Paths.get("roi/blocs").toFile();
         String s = "";
         File[] blocks = file.listFiles();
@@ -32,10 +32,7 @@ public class TesseractOCR {
             }
             Utils.progressBar(b,blocks.length);
         }
-        TextProcessing tp = new TextProcessing(s);
-        System.out.println(tp.getCvInfo());
-
-
+        return s;
     }
 
 

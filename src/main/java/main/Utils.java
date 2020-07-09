@@ -2,6 +2,8 @@ package main;
 
 import org.apache.commons.io.FileUtils;
 
+import javax.annotation.processing.SupportedSourceVersion;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +49,7 @@ public class Utils {
         }
         pB+="|"+percent+"\r";
         System.out.print(pB);
+        if(curr==max) System.out.println();
     }
 
     protected static String createFilename(int k, int l){
@@ -68,5 +71,15 @@ public class Utils {
             s += "";
         }
         return s + k;
+    }
+
+    protected static void write(String str){
+        try {
+            FileWriter myWriter = new FileWriter("filename.txt");
+            myWriter.write(str);
+            myWriter.close();
+        } catch (IOException e) {
+            System.err.println("COuldn't write to file.");
+        }
     }
 }

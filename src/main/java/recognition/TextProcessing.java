@@ -25,11 +25,16 @@ public class TextProcessing {
     }
 
     private String findEmail(){
+        /*
+        [a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+
+        ([a-zA-Z0-9-_.]+)@([a-zA-Z0-9-_.]+)[.-_]([a-zA-Z.]+)
+         */
         List<String> matches = Pattern.compile("[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+")
                 .matcher(this.fullText)
                 .results()
                 .map(MatchResult::group)
                 .collect(Collectors.toList());
+        System.out.println(matches);
         return matches.size()==1 ? matches.get(0) : "";
     }
 

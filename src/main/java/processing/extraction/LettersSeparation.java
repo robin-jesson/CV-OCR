@@ -59,10 +59,9 @@ public class LettersSeparation {
         Path dir = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\badletters");
         Path goodLetters = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters");
         double m = getMeanWidth(goodLetters.toFile().listFiles());
-        System.out.println(m);
+        //System.out.println(m);
         File[] imgs = dir.toFile().listFiles();
         for(int i=0;i<imgs.length;i++){
-            Utils.progressBar(i,imgs.length);
             List<Mat> letters = separate(dir,imgs[i],m);
             String currentName = FilenameUtils.removeExtension(imgs[i].getName());
             String[] splitted = currentName.split("_");
@@ -77,7 +76,7 @@ public class LettersSeparation {
                 }
                 catch (TooHighNumberException e){}
             }
-
+            Utils.progressBar(i+1,imgs.length);
         }
     }
 

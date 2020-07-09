@@ -7,10 +7,8 @@ import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.ml.KNearest;
 import org.opencv.ml.Ml;
-import org.opencv.ml.TrainData;
 import processing.Image;
 import processing.extraction.LetterDetection;
-import recognition.Recognition;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -133,7 +131,7 @@ public class Caractarestic {
 
     public static void main(String[] args) throws Exception {
         OpenCV.loadLocally();
-        boolean train = true;
+        boolean train = false;
         KNearest knn = null;
         if(train){
             File num = Paths.get("C:\\Users\\robin.jesson\\Desktop\\train\\num").toFile();
@@ -151,11 +149,16 @@ public class Caractarestic {
 
 
 
-        File numtest = Paths.get("C:\\Users\\robin.jesson\\Desktop\\numtest").toFile();
+        File numtest = Paths.get("C:\\Users\\robin.jesson\\Desktop\\test4").toFile();
         double total = 0;
         double totalFound = 0;
         for(File fold : numtest.listFiles()){
-            System.out.print(fold.getName().charAt(0) + " : ");
+            try {
+                System.out.print(Special.valueOf(fold.getName()).getC() + " : ");
+            }
+            catch (IllegalArgumentException e){
+                System.out.print(fold.getName().charAt(0) + " : ");
+            }
             double sum = 0;
             for(File img : fold.listFiles()){
                 Mat res = new Mat();
@@ -169,8 +172,14 @@ public class Caractarestic {
                 char c = (char)((int)p);
                 System.out.print(c+ " ");
                 String s ="zzz";
-                if(Character.toLowerCase(c)==Character.toLowerCase(fold.getName().charAt(0)))
-                    sum++;
+                try {
+                    if (Character.toLowerCase(c) == Special.valueOf(fold.getName()).getC())
+                        sum++;
+                }
+                catch (IllegalArgumentException e){
+                    if (Character.toLowerCase(c) == Character.toLowerCase(fold.getName().charAt(0)))
+                        sum++;
+                }
                 total++;
             }
             totalFound += sum;
