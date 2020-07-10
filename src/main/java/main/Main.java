@@ -12,7 +12,7 @@ import processing.preprocessing.Denoising;
 import processing.preprocessing.Deskewing;
 import processing.preprocessing.PageDetection;
 import processing.Image;
-import recognition.IRecognition;
+import recognition.OCR;
 import recognition.KnnOCR;
 import recognition.TesseractOCR;
 import recognition.TextProcessing;
@@ -34,7 +34,7 @@ public class Main {
     public static void main(String[] args) throws NotFileException, IOException {
         long startTime = System.currentTimeMillis();
 
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\img\\ipad.jpg";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\cv4.jpg";
         extraction(imgSrc);
         String txt = recognition(new TesseractOCR());
         Utils.write(txt);
@@ -102,7 +102,7 @@ public class Main {
         LettersSeparation.separateFolders();
     }
 
-    private static String recognition(IRecognition recognizer) throws IOException {
+    private static String recognition(OCR recognizer) throws IOException {
         return recognizer.recognize();
     }
 

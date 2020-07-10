@@ -21,7 +21,7 @@ public class TextProcessing {
                 .results()
                 .map(MatchResult::group)
                 .collect(Collectors.toList());
-        return matches.size()==1 ? matches.get(0) : "";
+        return matches.size()>=1 ? matches.get(matches.size()-1) : "";
     }
 
     private String findEmail(){
@@ -29,13 +29,13 @@ public class TextProcessing {
         [a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+
         ([a-zA-Z0-9-_.]+)@([a-zA-Z0-9-_.]+)[.-_]([a-zA-Z.]+)
          */
-        List<String> matches = Pattern.compile("[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+")
+        List<String> matches = Pattern.compile("[a-zA-Z0-9._-].+@.+[a-zA-Z0-9._-]")
                 .matcher(this.fullText)
                 .results()
                 .map(MatchResult::group)
                 .collect(Collectors.toList());
         System.out.println(matches);
-        return matches.size()==1 ? matches.get(0) : "";
+        return matches.size()>=1 ? matches.get(matches.size()-1) : ""; // get first email that appears (bottom to top reading)
     }
 
     private HashMap<String ,String> findNames(){

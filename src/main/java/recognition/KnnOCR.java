@@ -1,28 +1,23 @@
 package recognition;
 
-import exception.NotDividibleException;
 import exception.NotFileException;
 import main.Utils;
 import nu.pattern.OpenCV;
 import org.apache.commons.io.FilenameUtils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.ml.KNearest;
-import org.w3c.dom.Text;
 import processing.Image;
 import processing.extraction.LetterDetection;
 import train.Caractarestic;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
-public class KnnOCR implements IRecognition{
+public class KnnOCR implements OCR {
 
 
 

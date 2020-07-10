@@ -77,7 +77,7 @@ public class Caractarestic {
             return vec;
         }
         catch (CvException cve){
-            System.err.println("GetVector could not resize");
+            //System.err.println("GetVector could not resize");
             return new int[0];
         }
     }

@@ -5,18 +5,20 @@ import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 
 
 
-public class TesseractOCR implements IRecognition{
+public class TesseractOCR implements OCR{
     private static Tesseract tess;
 
     static{
         TesseractOCR.tess = new Tesseract();
         TesseractOCR.tess.setDatapath("src/main/resources");
         TesseractOCR.tess.setLanguage("fra");
-        TesseractOCR.tess.setTessVariable("user_defined_dpi", "70");
+        TesseractOCR.tess.setTessVariable("user_defined_dpi", "200");
+        tess.setTessVariable("tessedit_parallelize","true");
     }
 
     @Override
@@ -33,7 +35,6 @@ public class TesseractOCR implements IRecognition{
             Utils.progressBar(b,blocks.length);
         }
         return s;
+
     }
-
-
 }
