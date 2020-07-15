@@ -34,7 +34,7 @@ public class Main {
     public static void main(String[] args) throws NotFileException, IOException {
         long startTime = System.currentTimeMillis();
 
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\cv4.jpg";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\cv3.jpg";
         extraction(imgSrc);
         String txt = recognition(new TesseractOCR());
         Utils.write(txt);
@@ -46,21 +46,33 @@ public class Main {
 
     }
 
+    /**
+     * Extracts the letters from a picture and put them in a folder roi/letters.<br/>
+     * <ol>
+     *     <li>It first takes the 4 corners of a detected page and remove the background.</li>
+     *     <li>Then it detects the text dilating the text. Some zones text appears and opencv detects them.</li>
+     *     <li>On each text zone, the pixels are projected on the height to detect lines.</li>
+     *     <li>On each line, the words are detected also by dilating the letters.</li>
+     *     <li>Then on each words the letters ROI appear by projecting the pixel on the horizontal line.</li>
+     * </ol>
+     * @param imgSrc  A picture file path.
+     * @throws NotFileException The given path is not valid.
+     * @throws IOException
+     */
     private static void extraction(String imgSrc) throws NotFileException, IOException {
-        System.out.println("Letter extraction");
         Mat img = Image.loadImage(imgSrc);
         Mat warped = PageDetection.detectAndCropPage(img);
         Mat bw = Denoising.removeShadowAndBinarize(warped);
-        LinkedList<Mat> textzones = TextDetection.getTextBlock(bw);
+        LinkedList<Pair<Mat,Rect>> textzones = TextDetection.getTextBlock(bw);
         int progress = 0;
         int wordCount=0;
         int letterCount = 0;
-        for(Mat roi : textzones) {
-            progressBar(progress,textzones.size()-1);
-            Mat deskewed = Deskewing.deskewByHough(roi);
+        for(Pair<Mat,Rect> pair : textzones) {
+            progressBar(progress,textzones.size()-1,"Letter extraction");
+            Mat deskewed = Deskewing.deskewByHough(pair.getObject1());
             Mat whiteBackground = new Mat();
             Core.bitwise_not(deskewed,whiteBackground);
-            Image.saveImage(whiteBackground,"roi/blocs/"+createNumberString(wordCount)+".png");
+            Image.saveImage(new Mat(warped, pair.getObject2()),"roi/blocs/"+createNumberString(wordCount)+".png");
             LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
 
             for(Mat line : lines){
@@ -94,14 +106,26 @@ public class Main {
             progress++;
         }
 
-        System.out.println("Letters separation when needed");
         letterSeparation();
     }
 
+    /**
+     * Sometimes some letters are connected (due the quality of the photo).
+     * To fix it, the mean width og the "good" letters is calculated,
+     * then the connected letters are separated using the mean width by cuttiong the connected letters.
+     * @throws IOException
+     * @throws NotFileException
+     */
     private static void letterSeparation() throws IOException, NotFileException {
         LettersSeparation.separateFolders();
     }
 
+    /**
+     * Recognize the words present in the roi/letters folder.
+     * @param recognizer KNN or Tesseract
+     * @return
+     * @throws IOException
+     */
     private static String recognition(OCR recognizer) throws IOException {
         return recognizer.recognize();
     }

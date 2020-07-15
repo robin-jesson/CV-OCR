@@ -25,9 +25,14 @@ public class KnnOCR implements OCR {
         OpenCV.loadLocally();
     }
 
+    /**
+     * Recognizes the text using the KNN model.
+     * It fetches a knn model. Then it loops through the folder containing all separated letters
+     * @return
+     * @throws IOException
+     */
     @Override
     public String recognize() throws IOException {
-        System.out.println("Recognition");
         String res = "";
         var knn = KNearest.load("knn.yml");
         var dir = Paths.get("roi/letters");
@@ -58,7 +63,7 @@ public class KnnOCR implements OCR {
                 res += (char)((int)p);
             } catch (NotFileException e) {
             }
-            Utils.progressBar(++curr,dirSize);
+            Utils.progressBar(++curr,dirSize,"KNN Recognition");
         }
 
         return res;

@@ -7,34 +7,33 @@ import net.sourceforge.tess4j.TesseractException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-
+import java.util.Arrays;
 
 
 public class TesseractOCR implements OCR{
-    private static Tesseract tess;
+    private String s = "";
 
-    static{
-        TesseractOCR.tess = new Tesseract();
-        TesseractOCR.tess.setDatapath("src/main/resources");
-        TesseractOCR.tess.setLanguage("fra");
-        TesseractOCR.tess.setTessVariable("user_defined_dpi", "200");
-        tess.setTessVariable("tessedit_parallelize","true");
-    }
-
+    /**
+     * Uses the tesseract engine to recognize text on pictures. It loops through image files.
+     * @return Text containend in the images
+     */
     @Override
     public String recognize(){
-        File file = Paths.get("roi/blocs").toFile();
-        String s = "";
-        File[] blocks = file.listFiles();
-        for(int b = 0; b < blocks.length; b++){
+        this.s="";
+        Arrays.stream(Paths.get("roi/blocs").toFile().listFiles()).parallel().forEach(f -> {
             try {
-                s += TesseractOCR.tess.doOCR(blocks[b]) + " ";
+                System.out.println("Processing "+f.getName()+"...");
+                Tesseract ocr = new Tesseract();
+                ocr.setDatapath("src/main/resources");
+                ocr.setLanguage("fra");
+                ocr.setTessVariable("user_defined_dpi", "200");
+                TesseractOCR.this.s += ocr.doOCR(f);
             } catch (TesseractException e) {
                 e.printStackTrace();
             }
-            Utils.progressBar(b,blocks.length);
-        }
-        return s;
+        });
+
+        return this.s;
 
     }
 }

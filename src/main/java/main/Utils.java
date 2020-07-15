@@ -9,9 +9,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Tools class.
+ */
 public class Utils {
     /**
-     * initialize folder to store temporary image
+     * Initialize the folders that will contain the letters.
+     * Also create a blocs folder to contain RGB text blocks, badletters containing connected letters.
      */
     protected static void initFolder() {
         try {
@@ -35,12 +39,13 @@ public class Utils {
 
     /**
      * Write a pourcentage progressing bar.
-     * @param curr  current state
-     * @param max  maximum state
+     * @param curr  Current state
+     * @param max  Maximum state
+     * @param title Title of progress bar
      */
-    public static void progressBar(int curr, int max){
+    public static void progressBar(int curr, int max, String title){
         int percent = (int)((double)curr/max*100);
-        String pB = "|";
+        String pB = title + "|";
         for(int i = 0; i<percent; i++){
             pB+="#";
         }
@@ -52,10 +57,21 @@ public class Utils {
         if(curr==max) System.out.println();
     }
 
+    /**
+     * Create a file name with two numbers converted to string with four digits.
+     * @param k  First number
+     * @param l  Second number
+     * @return File name 0000_0000
+     */
     protected static String createFilename(int k, int l){
         return createNumberString(k)+"_"+createNumberString(l);
     }
 
+    /**
+     * Create a string of four digits.
+     * @param k  Number to convert to string
+     * @return  k with four digits
+     */
     protected static String createNumberString(int k){
         String s = "";
         if(k<10){

@@ -76,7 +76,7 @@ public class LettersSeparation {
                 }
                 catch (TooHighNumberException e){}
             }
-            Utils.progressBar(i+1,imgs.length);
+            Utils.progressBar(i+1,imgs.length,"Letter correction");
         }
     }
 
