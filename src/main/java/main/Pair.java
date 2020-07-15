@@ -1,5 +1,7 @@
 package main;
 
+import org.opencv.core.Mat;
+
 /**
  * Class to create a pair of objects of whatever types.
  * @param <T1>

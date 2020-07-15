@@ -55,6 +55,13 @@ public class LettersSeparation {
 
     }*/
 
+    /**
+     * Separate letters present in the badletters folders.
+     * It calculates the mean width of the good letters before cutting
+     * the coinnected letters using the mean width.
+     * @throws IOException
+     * @throws NotFileException
+     */
     public static void separateFolders() throws IOException, NotFileException {
         Path dir = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\badletters");
         Path goodLetters = Paths.get("C:\\Users\\robin.jesson\\Documents\\GitHub\\CV-OCR\\roi\\letters");

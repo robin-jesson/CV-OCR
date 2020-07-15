@@ -21,7 +21,7 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
  */
 public class Image {
     /**
-     * Load an image into an OpenCV matrix.
+     * Loads an image into an OpenCV matrix.
      * @param imagePath  path
      * @param color  colour or black/white
      * @return matrix of the image
@@ -39,7 +39,7 @@ public class Image {
     }
 
     /**
-     * Load a coloured image
+     * Loads a coloured image
      * @param imagePath path
      * @return  matrix of the image
      * @throws NotFileException
@@ -49,7 +49,7 @@ public class Image {
     }
 
     /**
-     * Save an image into a file.
+     * Saves an image into a file.
      * @param imageMatrix  matrix of the image
      * @param targetPath  path where to save
      */
@@ -61,7 +61,7 @@ public class Image {
     }
 
     /**
-     * Show an image in a window.
+     * Shows an image in a window.
      * @param src  mage
      * @param height  height of the window
      */
@@ -85,7 +85,7 @@ public class Image {
     }
 
     /**
-     * Show an image into a window of 500 px.
+     * Shows an image into a window of 500 px.
      * @param src  image
      */
     public static void imshow(Mat src) {
@@ -93,7 +93,7 @@ public class Image {
     }
 
     /**
-     * Resize an image given the height.
+     * Resizes an image given the height.
      * @param src  image
      * @param height  new height
      * @return resized image

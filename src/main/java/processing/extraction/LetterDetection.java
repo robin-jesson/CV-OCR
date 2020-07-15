@@ -19,6 +19,11 @@ public class LetterDetection {
         return m;
     }
 
+    /**
+     * Adds a line of zeros at top and bottom of a matrix.
+     * @param mat  Matrix to resize
+     * @return Resized matrix
+     */
     private static Mat addBegEndRowsToMat(Mat mat){
         Mat begLine = new Mat(1,mat.cols(),CvType.CV_8U, Scalar.all(0));
         Mat endLine = new Mat(1,mat.cols(),CvType.CV_8U, Scalar.all(0));
@@ -39,6 +44,17 @@ public class LetterDetection {
         return begLine;
     }
 
+    /**
+     * Detects the line of a ROI.
+     * <ol>
+     *     <li>Create a vertical projection of the ROI</li>
+     *     <li>On the projection, search for lines (starts at the top, when it reaches a black pixel,
+     *     it is marked as a new line. When it reach again a white pixel, it is marked as the end of the line.</li>
+     *     <li>A list of line ROIs is created</li>
+     * </ol>
+     * @param roi  Tet block ROI
+     * @return List of lines ROIs contained in the text block ROI
+     */
     public static LinkedList<Mat> detectLinesOfRoi(Mat roi){
         LinkedList<Mat> lines = new LinkedList<Mat>();
         Mat colNB = new Mat(roi.rows(),1, CvType.CV_8U);
@@ -79,8 +95,8 @@ public class LetterDetection {
     }
 
     /**
-     * Crop each side of the image until it reach the letter border.
-     * @param roi  binary image, background is black and letter is white
+     * Crops each side of the image until it reach the letter border.
+     * @param roi  Binary image, background is black and letter is white
      * @return Cropped letter
      */
     public static Mat cropROI(Mat roi){
@@ -117,6 +133,15 @@ public class LetterDetection {
         return new Mat(roi,rect);
     }
 
+    /**
+     * Detects the word of a line ROI.
+     * <ol>
+     *     <li>Dilates the white pixel (letters)</li>
+     *     <li>Gets the appearing blocks (words)</li>
+     * </ol>
+     * @param lineROI  ROI to search
+     * @return List of word ROIs detected in the line ROI.
+     */
     public static LinkedList<Mat> detectWordsOfLine(Mat lineROI){
         LinkedList<Mat> words = new LinkedList<Mat>();
         Mat lineDil = LetterDetection.dilateLetters(lineROI, 3);
@@ -136,6 +161,11 @@ public class LetterDetection {
         return words;
     }
 
+    /**
+     * Erodes a ROI
+     * @param roi  BW matrix
+     * @return Eroded ROI
+     */
     public static Mat erodeLetters(Mat roi){
         Mat erod = new Mat();
         final Size kernelSize = new Size(3, 3);
@@ -144,6 +174,12 @@ public class LetterDetection {
         return erod;
     }
 
+    /**
+     * Dilates a ROI
+     * @param roi  BW matrix
+     * @param inter
+     * @return Dilated ROI
+     */
     public static Mat dilateLetters(Mat roi, int inter){
         Mat dil = new Mat();
         final Size kernelSize = new Size(3, 3);
@@ -182,6 +218,13 @@ public class LetterDetection {
         return letters;
     }
 
+    /**
+     * Detects all letters in a matrix of a word.
+     * @param BWwordROI BW matrixes of a word
+     * @return List of matric of letter
+     * @throws TooSmallWidthOrHeightException
+     * @throws DifferentSizeException
+     */
     public static LinkedList<Mat> detectLettersOfWord(Mat BWwordROI) throws TooSmallWidthOrHeightException, DifferentSizeException {
         if(BWwordROI.width()<3 || BWwordROI.height()<3)
             throw new TooSmallWidthOrHeightException();
