@@ -20,7 +20,7 @@ public class TesseractOCR implements OCR{
     @Override
     public String recognize(){
         this.s="";
-        Arrays.stream(Paths.get("roi/blocs").toFile().listFiles()).parallel().forEach(f -> {
+        Arrays.stream(Paths.get("roi/blocs").toFile().listFiles()).forEach(f -> {
             try {
                 System.out.println("Processing "+f.getName()+"...");
                 Tesseract ocr = new Tesseract();
