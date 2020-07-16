@@ -7,7 +7,7 @@ import org.opencv.core.Mat;
  * @param <T1>
  * @param <T2>
  */
-public class Pair<T1,T2> {
+public class Duet<T1,T2> {
     private T1 object1;
     private T2 object2;
 
@@ -16,7 +16,7 @@ public class Pair<T1,T2> {
      * @param object1  First object
      * @param object2  Second object
      */
-    public Pair(T1 object1, T2 object2) {
+    public Duet(T1 object1, T2 object2) {
         this.object1 = object1;
         this.object2 = object2;
     }
