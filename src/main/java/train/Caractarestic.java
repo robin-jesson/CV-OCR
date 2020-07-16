@@ -149,7 +149,7 @@ public class Caractarestic {
 
 
 
-        File numtest = Paths.get("C:\\Users\\robin.jesson\\Desktop\\test4").toFile();
+        File numtest = Paths.get("C:\\Users\\robin.jesson\\Desktop\\numtest").toFile();
         double total = 0;
         double totalFound = 0;
         for(File fold : numtest.listFiles()){

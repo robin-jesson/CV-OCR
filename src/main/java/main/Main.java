@@ -34,7 +34,7 @@ public class Main {
     public static void main(String[] args) throws NotFileException, IOException {
         long startTime = System.currentTimeMillis();
 
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\cv3.jpg";
+        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\photoandroid\\cv5.jpg";
         extraction(imgSrc);
         String txt = recognition(new TesseractOCR());
         Utils.write(txt);

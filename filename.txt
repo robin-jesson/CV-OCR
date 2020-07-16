@@ -1,165 +1,132 @@
-LOISIRS > Course à pieà, randonñée
-VOYAGE »> 4 ans en Guyäne Française
-PATISSERIE > Cake design, muffins, tartes
-Centres d'intérêt
-T R e OE e
-SE R E TS E
-MEDICAL » Attestation aux gestes et soins d'urgences niveau 2, Attestation à la radioprotection des patients
-exposés aux ravonnements ionisants, Expérimentation animale, Recherche clinique, Radioprotection
-IMAGERIE MEDICALE >
- Scanner, IRM, Artis Zeego, C-Arm, Echographes, Endoscopes, Laparoscopes
-GESTION DE PROJET
-> Pack office, GitLab, Diagramme de Gantt, Diagramme de flux, Agile Kanban
- Visual Studio, Qt
-INFORMATIQUE »> PACS, Osirix, Syngo.via, Matlab, C++, Xml, Sql, FileMaker, iOs,
-LANGUES »> Anglais : B2 (TOEIC : 835) Espagnol : A2 Allemand : compréhension
-Compétences
-@
-2013 — 2014 » BACCALAUREAT SCIENTIFIQUE > LYCEE JEAN ROSTAND, STRASBOURG
-RADIOLOGIE THERAPEUTIQUE (DTS IMRT) » LYCEE JEAN ROSTAND, STRASBOURG
-2014
-2017
-DIPLOME
-DE
-ET
-EN
-TECHNICIEN
-MEDICALE
-IMAGERIE
-SUPERIEUR
-Formation en alternance à l‘Ircad - IHU de Strasbourg
-SANTE >
- TELECOM PHYSIQUE, STRASBOURG
-2017
-DIPLOME
-2020
-D'INGENIEUR
-EN
-DE
-TECHNOLOGIES
-LA
-L'INFORMATION
-POUR
-es
-Formations
-©
-scanner,
-et
-vasculaire
-cardiaque,
-IRM
-> Stages de trois à six semaines en imagerie médicale
-> Radiologie conventionnelle, radiologie vascula
-radiothérapie, médecine nucléaire
-STRASBOURG ET METZ >
-; STAGIAIRE MANIPULATRICE EN ELECTRORADIOLOGIE MEDICALE
-ET
-UNIVERSITAIRES
-HOPITAUX
-2017
-2014
-CABINETS
-D'IMAGERIE
-DE
-MEDICALE
-gen
-mois) :
-! Stàge à l'étranger (1 mois) : Fc
-l'Ircad Africa à Kigali (Rwanda)
-Formation à l'imagerie médicale des ingénieurs travaillant à
-en
-pour
-d'un
-FileMaker
-système
-d‘information
-la
-plateforme
-en
-au
-œxs
-> Participation au développement en C++ et Xml d'une
-échographique pour l’ablation thermique des tumeurs.
+LOISIRS
+- -—
+Equivalent B2+ (Janv.2019)
+Parlé et écrit au quotidien
+Allemand
+Notions Photos
+MAC
+Photofiltre
+BAAN (ERP)
+Sage
+Pack Office
+TOEIC : 805 (Déc.2012)
+Parlé et écrit au quotidien
+Anglais
+LANGUES
+COMPÉTENCES
+u VS SV OI OS TT ESS TS SVREN T SCSS
+Mai à Juillet 20
+Chargé de développement commercial (stage) — TRIUMPH International —- Obernai Mai à Juillet ;
+Démarchage de partenariats pour des visites touristiques, la location d'un local commercial et recherche d'un
+nouveau lieu d'implantation en France.
+Assistant Acheteurs Stratégiques (stage) — LIEBHERR France — Colmar Sept. 2014 à Juin 20
+Aide dans la présentation et le suivi de la stratégie des familles de produits et des relations fournisseurs.
+Gestion du portefeuille des filtres : analyse de la situation des pièces de rechange, objectif d'améliorat
+de cette dernière ;
 
-> Développement en FileMaker d'un système d'in
-expérimentale de l'IHU.
-d'une
-et Xm
-technique
-nouvelle
-de
-guidage
-sur
-aux
-des
-Réalisation d'expérimentations
-projets de la R&D.
-> Participation au développeme
-Réalisation
-modèles
-participations
-différents
-en
-sur
-> Manipulatrice
-électroradiologie
-la
-médicale
-la plateforme
-animaux, par
-l'IHU.
-de
-expérimentale
-Expériences
-Expériences professionnelles
-2017 — 2020 > IRCAD - IHU STRASBOURG » APPRENTIE INGENIEURE EN R&D
-©
-Permis B, véhicule personnel
-Email > anaelle.steiner4@gmail.com
-Linkedin > Anaëlle STEINER
-67200 StrasbBurg
-Née le 10 juin 1996
-Tél » 06.03.34 69 16
-9 rue du Klingentha
+Gestion de la liquidation judiciaire de l'un de nos fournisseurs (axes et bagues) ;
+
+Membre de l’équipe projet pour l’externalisation de l’activité de débit ;
+
+Aide auprès des acheteurs stratégiques, relation continue avec les fournisseurs.
+Juillet 2015 à Août 20
+Apprenti Acheteur — LIEBHERR France — Colmar
+sion Terr
+Gestion de différents portefeuilles : antennes, radios, batteries, faisceaux de câbles, supports de couro
+bagues et axes pour un volume d'achat de 10M€ (anciens portefeuilles : pièces kanban, pièces normées, jc
+visserie, raccords hydrauliques (Lead Buyer de la division Terrassement)) ;
+
+Mise en place et maintien des stratégies d’achat pour mes familles de produits ;
+
+Collaboration avec l’ensemble des services et des usines de la division Terrassement ;
+
+Création d’un nouveau compte fournisseur de faisceaux de câbles ;
+
+Gestion de la crise des câblages : fournisseurs critiques, manque de main d'oeuvre en Europe de |
+rupture de composants électriques ;
+
+Mise en place du kanban pour les nouvelles pelles et la réorganisation des lignes de production ;
+Participation à la standardisation et au changement du traitement de matière pour la visserie.
+Depuis Septembre 2C
+Acheteur Production — LIEBHERR France — Colmar
+PROFESSIONNELLES
+EXPERIENCES
+- es
+-
+Baccaulauréat Scientifique
+Lycée Dr Koeberlé — Sélestat
+Mention Assez Bien — Mention Section Européene Anglais
+2010
+2010 — 2012
+/
+BTS Comptabilité et Gestion des Organisations
+Lycée Dr Koeberlé — Sélestat
+2012 — 2016
+Master 2 — Marketing Distribution Achats 2012- 2016
+Burgundy School of Business — Dijon
+
+Semestre académique à Berlin , ;
+Thèse professionelle : Les influences des relations achats sur les produits et dans le chpnx des clients
+Vie associative : Membre du Bureau des Sports —- Membre de l'Association des Paralysés de France
+/
+FORMATION
+Æ Ÿ 15 Rue Saint Roch 67600 SÉLESTAT
+M
+15 Rue Saint Roch 67600 SÉLESTAT
+06.58.0055 71
+L
 &
-Anaèelle
-STEINER
-‘ æ Anaëlle STEINER
-—-— 9 rue du Klingenthal
-= 67200 Strasbourg
-Née le 10 juin 1996
-Permis B, véhicule personnel
-® | Expériences professionnelles
-2017 — 2020 > IRCAD - IHU STRASBOURG » APPRENTIE INGEN
-> Manipulatrice en électroradiologie médicale sur la p
-Réalisation d'expérimentations sur des modèles anir
-projets de la R&D.
-> Participation au développement en C++ et Xml d'ur
-échographique pour l’ablation thermique des tumeur
-> Développement en FileMaker d'un système d'
-expérimentale de l'IHU.
-> Stage à l'étranger (1 mois) : Formation à l'imagerie m
-l'Ircad Africa à Kigali (Rwanda)
-2014 — 2017 > HOPITAUX UNIVERSITAIRES ET CABINE
-STRASBOURG ET METZ » STAGIAIRE MANIPULATRICE EN ELEC
-> Stages de trois à six semaines en imagerie médicale
-> Radiologie conventionnelle, radiologie vasculaire
-radiothérapie, médecine nucléaire
-Ë}Ê Formations
-2017 — 2020 > DIPLOME D'INGENIEUR EN TECHNOLOGIES
-SANTE > TELECOM PHYSIQUE, STRASBOURG
-> Formation en alternance à lIrcad - IHU de Strasbourg
-2014 —- 2017 > DIPLOME DE TECHNICIEN SUPERIEUR
-RADIOLOGIE THERAPEUTIQUE (DTS IMRT) » LYCEE JEAN ROS"
-2013 — 2014 » BACCALAUREAT SCIENTIFIQUE » LYCEE JEAN R
-[ Compétences
-LANGUES » Anglais : B2 (TOEIC : 835) Espagnol : A2 Allemand : comp
-INFORMATIQUE »> PACS, Osirix, Syngo.via, Matlab, C++, Xml, Sq], File
-GESTION DE PROJET »> Pack office, GitLab, Diagramme de Gantt, Die
-IMAGERIE MEDICALE »> Scanner, IRM, Artis Zeego, C-Arm, Echograp
-MEDICAL » Attestation aux gestes et soins d'urgences niveau 2, Attest
-exposés aux rayonnements ionisants, Expérimentation animale, Recher
-@ Centres d'intérêt
-PATISSERIE > Cake design, muffins, tartes
-VOYAGE »> 4 ans en Guyane Française
-LOISIRS > Course à pied, randonnée
+Ÿ
+arnaud.wachenheim@gmail.com
+Trilingue
+Acheteu
+z s.
+Arnaud WACHENHEIM
+Arnaud WACHENHEIM
+3 Acheteur Trilingue
+@ — arnaud.wachenheim@gmail.com
+; C  06.58.00.55.71
+Ë Ÿ 15 Rue Saint Roch 67600 SÉLESTAT
+r t rr r 2222 2 222222222222
+FORMATION
+y Master 2 — Marketing Distribution Achats 2012 — 2016
+Burgundy School of Business — Dijon
+Semestre académique à Berlin
+T!1èse professionelle : Les influences des relations achats sur les produits et dans le choix des clients
+Vie associative : Membre du Bureau des Sports - Membre de l'Association des Paralysés de France
+y _ BTS Comptabilité et Gestion des Organisations 2010 — 2012
+Lycée Dr Koeberlé — Sélestat
+y Baccaulauréat Scientifique es
+Lycée Dr Koeberlé — Sélestat
+Mention Assez Bien — Mention Section Européene Anglais
+m
+EXPERIENCES PROFESSIONNELLES
+Acheteur Production — LIEBHERR France — Colmar Depuis Septembre 2(
+- _ Gestion de différents portefeuilles : antennes, radios, batteries, faisceaux de câbles, supports de couro
+bagues et axes pour un volume d'achat de 10M€ (anciens portefeuilles : pièces kanban, pièces normées, jc
+visserie, raccords hydrauliques (Lead Buyer de la division Terrassement)) ;
+- Mise en place et maintien des stratégies d’achat pour mes familles de produits ;
+- _ Collaboration avec l’ensemble des services et des usines de la division Terrassement ;
+- _ Création d’un nouveau compte fournisseur de faisceaux de câbles ;
+-  Gestion de la crise des câblages : fournisseurs critiques, manque de main d'oeuvre en Europe de |
+rupture de composants électriques ;
+- Mise en place du kanban pour les nouvelles pelles et la réorganisation des lignes de production ;
+- _ Participation à la standardisation et au changement du traitement de matière pour la visserie.
+Apprenti Acheteur — LIEBHERR France — Colmar Juillet 2015 à Août 20
+- _ Gestion du portefeuille des filtres : analyse de la situation des pièces de rechange, objectif d'améliorati
+de cette dernière ;
+- _ Gestion de la liquidation judiciaire de l'un de nos fournisseurs (axes et bagues) ;
+- Membre de l'équipe projet pour l’externalisation de l’activité de débit ;
+- _ Aide auprès des acheteurs stratégiques, relation continue avec les fournisseurs.
+Assistant Acheteurs Stratégiques (stage) — LIEBHERR France — Colmar Sept. 2014 à Juin 20
+Aide dans la présentation et le suivi de la stratégie des familles de produits et des relations fournisseurs.
+Chargé de développement commercial (stage) — TRIUMPH International —- Obernai Mai à Juillet 2C
+Démarchage de partenariats pour des visites touristiques, la location d'un local commercial et recherche d'un
+nouveau lieu d'implantation en France.
+mt r e e r r e e e e A A
+LANGUES COMPETENCES
+Anglais TOEIC : 805 (Déc.2012) Pack Office Sage BAAN (ERP)
+Parlé et écrit au quotidien Photofiltre MAC Notions Photos
+Allemand _ Equivalent B2+ (Janv.2019) R
+Parlé et écrit au quotidien
+LOISIRS
