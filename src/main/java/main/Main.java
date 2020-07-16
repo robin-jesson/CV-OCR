@@ -18,6 +18,7 @@ import recognition.TesseractOCR;
 import recognition.TextProcessing;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,17 +33,18 @@ public class Main {
     }
 
     public static void main(String[] args) throws NotFileException, IOException {
-        long startTime = System.currentTimeMillis();
+        String cv1="C:\\Users\\robin.jesson\\Desktop\\photoandroid\\cv1.jpg";
+        //String cv2="C:\\Users\\robin.jesson\\Desktop\\photoandroid\\cv2.jpg";
+        System.out.println(ocerize(cv1));
+    }
 
-        String imgSrc="C:\\Users\\robin.jesson\\Desktop\\photoandroid\\cv5.jpg";
-        extraction(imgSrc);
+    public static HashMap<String,String> ocerize(String... srcs) throws NotFileException, IOException {
+
+        extraction(srcs);
         String txt = recognition(new TesseractOCR());
         Utils.write(txt);
         TextProcessing tp = new TextProcessing(txt);
-        System.out.println(tp.getCvInfo());
-
-        long elapsedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Temps exec = "+elapsedTime/1000);
+        return tp.getCvInfo();
 
     }
 
@@ -59,20 +61,31 @@ public class Main {
      * @throws NotFileException The given path is not valid.
      * @throws IOException
      */
-    private static void extraction(String imgSrc) throws NotFileException, IOException {
-        Mat img = Image.loadImage(imgSrc);
-        Mat warped = PageDetection.detectAndCropPage(img);
-        Mat bw = Denoising.removeShadowAndBinarize(warped);
-        LinkedList<Pair<Mat,Rect>> textzones = TextDetection.getTextBlock(bw);
+    private static void extraction(String... imgSrc) throws NotFileException, IOException {
+        Mat[] bws = new Mat[imgSrc.length];
+        Mat[] warpeds = new Mat[imgSrc.length];
+
+        for(int s =0; s<imgSrc.length; s++){
+            Mat img = Image.loadImage(imgSrc[s]);
+            warpeds[s] = PageDetection.detectAndCropPage(img);
+            bws[s] = Denoising.removeShadowAndBinarize(warpeds[s]);
+        }
+
+        LinkedList<Triplet<Mat,Rect,Mat>> textzones = TextDetection.getTextBlock(bws, warpeds);
         int progress = 0;
         int wordCount=0;
         int letterCount = 0;
-        for(Pair<Mat,Rect> pair : textzones) {
+        for(Triplet<Mat,Rect,Mat> triplet : textzones) {
+            /*
+            triplet.a = ROI (text zone)
+            triplet.b = ROI position (opnecv rect object) in the global image (after transforms)
+            triplet.c = global image (after transforms)
+             */
             progressBar(progress,textzones.size()-1,"Letter extraction");
-            Mat deskewed = Deskewing.deskewByHough(pair.getObject1());
+            Mat deskewed = Deskewing.deskewByHough(triplet.a);
             Mat whiteBackground = new Mat();
             Core.bitwise_not(deskewed,whiteBackground);
-            Image.saveImage(new Mat(warped, pair.getObject2()),"roi/blocs/"+createNumberString(wordCount)+".png");
+            Image.saveImage(new Mat(triplet.c, triplet.b),"roi/blocs/"+createNumberString(wordCount)+".png");
             LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
 
             for(Mat line : lines){

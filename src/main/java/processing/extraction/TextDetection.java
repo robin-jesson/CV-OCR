@@ -1,6 +1,7 @@
 package processing.extraction;
 
-import main.Pair;
+import main.Duet;
+import main.Triplet;
 import nu.pattern.OpenCV;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -17,8 +18,8 @@ public class TextDetection {
      * @param images images RGB ou NG
      * @return Liste de matrice RGB ou NG selon format d'entrée
      */
-    public static LinkedList<Pair<Mat,Rect>> getTextBlock(Mat... images){
-        LinkedList<Pair<Mat,Rect>> rois = new LinkedList<>();
+    public static LinkedList<Triplet<Mat,Rect,Mat>> getTextBlock(Mat[] images, Mat[] warpeds){
+        LinkedList<Triplet<Mat,Rect,Mat>> rois = new LinkedList<>();
         for(int m=0;m<images.length;m++) {
             final Size kernelSize = new Size(3, 3);
 
@@ -38,7 +39,7 @@ public class TextDetection {
             for (int i = 0; i < contours.size(); i++) {
                 Rect rect = Imgproc.boundingRect(contours.get(i));
                 if (rect.width > 35 && rect.height > 35)
-                    rois.add(new Pair<>(new Mat(images[m], rect), rect));
+                    rois.add(new Triplet<>(new Mat(images[m], rect), rect, warpeds[m]));
             }
         }
         return rois;

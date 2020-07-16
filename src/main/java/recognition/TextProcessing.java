@@ -31,7 +31,7 @@ public class TextProcessing {
      * @return Substring matching the phone pattern or empty string if none is found
      */
     private String findPhone(){
-        List<String> matches = Pattern.compile("(\\+|0)([0-9][ .]?){8,12}[0-9]")
+        List<String> matches = Pattern.compile("(\\+|0)(\\(?[0-9]\\)?[ .]?){8,12}[0-9]")
                 .matcher(this.fullText)
                 .results()
                 .map(MatchResult::group)
@@ -53,7 +53,6 @@ public class TextProcessing {
                 .results()
                 .map(MatchResult::group)
                 .collect(Collectors.toList());
-        System.out.println(matches);
         return matches.size()>=1 ? matches.get(matches.size()-1) : ""; // get first email that appears (bottom to top reading)
     }
 
