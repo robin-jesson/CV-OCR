@@ -11,30 +11,33 @@ import java.util.List;
 public class PageDetection {
 
     /**
-     * Detect the rectagle paper in an image.
+     * Detect the rectangle paper in an image.
      * If none is found, then the original image is returned.
      * @param image  original picture of a paper page.
      * @return  either the page warped or the original page.
      */
     public static Mat detectAndCropPage(Mat image) {
-
+        //copy the image in a new one with a height of 500 to fasten the process
         double ratio = image.rows()/500;
         Mat orig = image.clone();
         image = Image.resizeH(image,500);
 
         Mat gray = new Mat();
         Imgproc.cvtColor(image,gray,Imgproc.COLOR_BGR2GRAY);
+        //blur the image to unite the color
         Imgproc.GaussianBlur(gray,gray,new Size(5,5),0);
         Mat edged = new Mat();
+        //detect the edges using canny
         Imgproc.Canny(gray,edged,75,200);
 
-
+        //detect contours with the detected edges
         List<MatOfPoint> cnts = new ArrayList<>();
         Mat hier = new Mat();
         Imgproc.findContours(edged.clone(),cnts,hier, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_NONE);
         MatOfPoint2f screenCnt2f = new MatOfPoint2f();
         MatOfPoint screenCnt = new MatOfPoint();
         double biggestPeri = -1.0;
+        //loop through all contours : if a contours as 4 edges then it could be a page. It finds the 4-edged contours with the greatest area.
         for(MatOfPoint mP : cnts){
             MatOfPoint2f c = new MatOfPoint2f( mP.toArray() );
             double peri = Imgproc.arcLength(c,true);
@@ -48,10 +51,10 @@ public class PageDetection {
                 }
             }
         }
-        List<MatOfPoint> l = new ArrayList<>();
-        l.add(screenCnt);
+        //scale the pts position to the real size
         MatOfPoint2f ptsScaled = new MatOfPoint2f();
         Core.multiply(screenCnt2f,new Scalar(ratio,ratio),ptsScaled);
+        //transform the image with the 4 points
         Mat warped = new Mat();
         try {
             warped = fourPointTransform(orig,ptsScaled.toList());

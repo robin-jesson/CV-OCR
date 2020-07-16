@@ -33,11 +33,18 @@ public class Main {
     }
 
     public static void main(String[] args) throws NotFileException, IOException {
-        String cv1="C:\\Users\\robin.jesson\\Desktop\\photoandroid\\cv1.jpg";
+        String cv1="C:\\Users\\robin.jesson\\Desktop\\photoandroid\\cv2c.jpg";
         //String cv2="C:\\Users\\robin.jesson\\Desktop\\photoandroid\\cv2.jpg";
         System.out.println(ocerize(cv1));
     }
 
+    /**
+     * Main method to ocerize pictures
+     * @param srcs Paths to the pics
+     * @return map of detected information
+     * @throws NotFileException
+     * @throws IOException
+     */
     public static HashMap<String,String> ocerize(String... srcs) throws NotFileException, IOException {
 
         extraction(srcs);
@@ -64,13 +71,15 @@ public class Main {
     private static void extraction(String... imgSrc) throws NotFileException, IOException {
         Mat[] bws = new Mat[imgSrc.length];
         Mat[] warpeds = new Mat[imgSrc.length];
-
         for(int s =0; s<imgSrc.length; s++){
             Mat img = Image.loadImage(imgSrc[s]);
+            //detect the paper in a picture and transform the image to only have the paper
             warpeds[s] = PageDetection.detectAndCropPage(img);
+            //rmeove the shadows from the paper
             bws[s] = Denoising.removeShadowAndBinarize(warpeds[s]);
         }
 
+        //detect the text zones in a pictures
         LinkedList<Triplet<Mat,Rect,Mat>> textzones = TextDetection.getTextBlock(bws, warpeds);
         int progress = 0;
         int wordCount=0;
@@ -83,33 +92,29 @@ public class Main {
              */
             progressBar(progress,textzones.size()-1,"Letter extraction");
             Mat deskewed = Deskewing.deskewByHough(triplet.a);
-            Mat whiteBackground = new Mat();
-            Core.bitwise_not(deskewed,whiteBackground);
             Image.saveImage(new Mat(triplet.c, triplet.b),"roi/blocs/"+createNumberString(wordCount)+".png");
-            LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
 
+            //detect the line of a text bloc
+            LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
             for(Mat line : lines){
                 if(!line.empty()){
+                    //detect the words in a line
                     List<Mat> words = LetterDetection.detectWordsOfLine(line);
                     for(Mat word : words){
-                        //Image.saveImage(word,"roi/words/"+createNumberString(wordCount)+".png");
                         try {
+                            //detect the letters in a single word
                             List<Mat> letters = LetterDetection.detectLettersOfWord(word);
-
                             for(Mat letter : letters){
-
+                                //save the letters (check the size to see if the letter has connected letters)
                                 if(letter.height()<letter.width())
-                                    Image.saveImage(letter,"roi/badletters/"+createFilename(wordCount,letterCount++)+"_00.png");
+                                    Image.saveImage(letter,
+                                            "roi/badletters/"+createFilename(wordCount,letterCount++)+"_00.png");
                                 else
-                                    Image.saveImage(letter,"roi/letters/"+createFilename(wordCount,letterCount++)+"_00.png");
+                                    Image.saveImage(letter,
+                                            "roi/letters/"+createFilename(wordCount,letterCount++)+"_00.png");
                             }
-
                         }
-                        catch (TooSmallWidthOrHeightException e) {}
-                        catch (DifferentSizeException e) {
-                            //System.err.println(e);
-                            //Image.imshow(word,500);
-                        }
+                        catch (TooSmallWidthOrHeightException | DifferentSizeException e) {}
                         wordCount++;
                         letterCount = 0;
                     }
@@ -118,7 +123,7 @@ public class Main {
             }
             progress++;
         }
-
+        //separate images previously marked as connected letters
         letterSeparation();
     }
 
@@ -142,8 +147,4 @@ public class Main {
     private static String recognition(OCR recognizer) throws IOException {
         return recognizer.recognize();
     }
-
-
-
-
 }
