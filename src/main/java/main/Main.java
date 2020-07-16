@@ -35,7 +35,7 @@ public class Main {
     public static void main(String[] args) throws NotFileException, IOException {
         String cv1="C:\\Users\\robin.jesson\\Desktop\\photoandroid\\cv2c.jpg";
         //String cv2="C:\\Users\\robin.jesson\\Desktop\\photoandroid\\cv2.jpg";
-        System.out.println(ocerize(cv1));
+        System.out.println(ocerize(false, cv1));
     }
 
     /**
@@ -45,9 +45,9 @@ public class Main {
      * @throws NotFileException
      * @throws IOException
      */
-    public static HashMap<String,String> ocerize(String... srcs) throws NotFileException, IOException {
+    public static HashMap<String,String> ocerize(boolean extractLetters, String... srcs) throws NotFileException, IOException {
 
-        extraction(srcs);
+        extraction(extractLetters, srcs);
         String txt = recognition(new TesseractOCR());
         Utils.write(txt);
         TextProcessing tp = new TextProcessing(txt);
@@ -68,7 +68,7 @@ public class Main {
      * @throws NotFileException The given path is not valid.
      * @throws IOException
      */
-    private static void extraction(String... imgSrc) throws NotFileException, IOException {
+    private static void extraction(boolean extractLetters, String... imgSrc) throws NotFileException, IOException {
         Mat[] bws = new Mat[imgSrc.length];
         Mat[] warpeds = new Mat[imgSrc.length];
         for(int s =0; s<imgSrc.length; s++){
@@ -84,6 +84,7 @@ public class Main {
         int progress = 0;
         int wordCount=0;
         int letterCount = 0;
+        int blocCount = 0;
         for(Triplet<Mat,Rect,Mat> triplet : textzones) {
             /*
             triplet.a = ROI (text zone)
@@ -92,36 +93,38 @@ public class Main {
              */
             progressBar(progress,textzones.size()-1,"Letter extraction");
             Mat deskewed = Deskewing.deskewByHough(triplet.a);
-            Image.saveImage(new Mat(triplet.c, triplet.b),"roi/blocs/"+createNumberString(wordCount)+".png");
-
-            //detect the line of a text bloc
-            LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
-            for(Mat line : lines){
-                if(!line.empty()){
-                    //detect the words in a line
-                    List<Mat> words = LetterDetection.detectWordsOfLine(line);
-                    for(Mat word : words){
-                        try {
-                            //detect the letters in a single word
-                            List<Mat> letters = LetterDetection.detectLettersOfWord(word);
-                            for(Mat letter : letters){
-                                //save the letters (check the size to see if the letter has connected letters)
-                                if(letter.height()<letter.width())
-                                    Image.saveImage(letter,
-                                            "roi/badletters/"+createFilename(wordCount,letterCount++)+"_00.png");
-                                else
-                                    Image.saveImage(letter,
-                                            "roi/letters/"+createFilename(wordCount,letterCount++)+"_00.png");
+            Image.saveImage(new Mat(triplet.c, triplet.b),"roi/blocs/"+createNumberString(blocCount++)+".png");
+            if(extractLetters) {
+                //detect the line of a text bloc
+                LinkedList<Mat> lines = LetterDetection.detectLinesOfRoi(deskewed);
+                for (Mat line : lines) {
+                    if (!line.empty()) {
+                        //detect the words in a line
+                        List<Mat> words = LetterDetection.detectWordsOfLine(line);
+                        for (Mat word : words) {
+                            try {
+                                //detect the letters in a single word
+                                List<Mat> letters = LetterDetection.detectLettersOfWord(word);
+                                for (Mat letter : letters) {
+                                    //save the letters (check the size to see if the letter has connected letters)
+                                    if (letter.height() < letter.width())
+                                        Image.saveImage(letter,
+                                                "roi/badletters/" + createFilename(wordCount, letterCount++) + "_00.png");
+                                    else
+                                        Image.saveImage(letter,
+                                                "roi/letters/" + createFilename(wordCount, letterCount++) + "_00.png");
+                                }
+                            } catch (TooSmallWidthOrHeightException | DifferentSizeException e) {
                             }
+                            wordCount++;
+                            letterCount = 0;
                         }
-                        catch (TooSmallWidthOrHeightException | DifferentSizeException e) {}
-                        wordCount++;
-                        letterCount = 0;
-                    }
 
+                    }
                 }
             }
             progress++;
+
         }
         //separate images previously marked as connected letters
         letterSeparation();

@@ -20,6 +20,8 @@ es
 GESTION DE PROJET
 sD ; SLN JD T 070 4 SEME SE E E S E
 , Pack office, GitLab, Diagramme de Gantt, Diagramme de flux, Agile Kanban
+LMN REN ETE T e
+INFORMATIQUE » PACS, Osirix, Syngovia, Matlab, C++, Xml, Sql, FileMaker, iOs, Visual Studio, Qt
 155 ETEN
 LANGUES » Anglais : B2 (TOEIC : 835) Espagnol : A2 Allemand : compréhension
 I . e S
